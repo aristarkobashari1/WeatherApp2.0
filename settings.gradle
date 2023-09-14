@@ -1,0 +1,22 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "WeatherApp2.0"
+include ':app'
+include ':common'
+include ':data'
+include ':database'
+include ':model'
+include ':network'
+include ':feature'

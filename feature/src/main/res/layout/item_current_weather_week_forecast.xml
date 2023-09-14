@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="weekWeather"
+            type="com.example.database.entity.Weather" />
+
+        <variable
+            name="clickListener"
+            type="android.view.View.OnClickListener" />
+
+
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/gray_bcg"
+        android:orientation="horizontal"
+        android:paddingHorizontal="5dp"
+        android:paddingVertical="15dp"
+        android:onClick="@{clickListener}"
+        >
+
+        <ImageView
+            android:id="@+id/list_item_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp" />
+
+        <TextView
+            android:id="@+id/list_item_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            tools:text="Thursday, 7 August"
+            android:text="@{weekWeather.time}"
+            />
+
+        <TextView
+            android:id="@+id/list_item_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:textColor="@color/black"
+            tools:text="28 C"
+            android:text="@{weekWeather.temperature}"/>
+
+    </LinearLayout>
+</layout>

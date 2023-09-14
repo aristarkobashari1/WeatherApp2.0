@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.feature.ui.profile.ProfileViewModel" />
+
+        <variable
+            name="location"
+            type="String" />
+
+        <variable
+            name="language"
+            type="String" />
+
+        <variable
+            name="unit"
+            type="String" />
+    </data>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.profile.NotificationsFragment"
+    android:background="@color/lighter_gray">
+
+    <LinearLayout
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/profile_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/smooth_orange"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Aristarko Bashari"
+            android:textSize="22sp"
+            android:textColor="@color/lighter_gray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="email@yahoo.com"
+            android:textSize="15sp"
+            android:textColor="@color/lighter_gray"/>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/locationLayout"
+        app:layout_constraintTop_toBottomOf="@id/profile_banner"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/PurpleLinearLayout">
+
+        <TextView
+            style="@style/SettingsLinearItem"
+            tools:text="location" />
+
+        <TextView
+            style="@style/SettingsLinearItemRight"
+            tools:text="cairo, Egypt"
+            android:text="@{location}"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/languageLayout"
+        app:layout_constraintTop_toBottomOf="@id/locationLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/PurpleLinearLayout">
+
+        <TextView
+            style="@style/SettingsLinearItem"
+            tools:text="language" />
+
+        <TextView
+            style="@style/SettingsLinearItemRight"
+            tools:text="EN"
+            android:text="@{language}"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/unitsLayout"
+        app:layout_constraintTop_toBottomOf="@id/languageLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/PurpleLinearLayout">
+
+        <TextView
+            style="@style/SettingsLinearItem"
+            tools:text="units" />
+
+        <TextView
+            style="@style/SettingsLinearItemRight"
+            tools:text="Celcius"
+            android:text="@{unit        }"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/help"
+        app:layout_constraintTop_toBottomOf="@id/unitsLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/PurpleLinearLayout">
+
+        <TextView
+            style="@style/SettingsLinearItem"
+            tools:text="Help" />
+
+        <TextView
+            style="@style/SettingsLinearItemRight" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/log_out"
+        app:layout_constraintTop_toBottomOf="@id/help"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/PurpleLinearLayout">
+
+        <TextView
+            style="@style/SettingsLinearItem"
+            tools:text="Log out" />
+
+        <TextView
+            style="@style/SettingsLinearItemRight"
+            android:onClick="@{()->viewModel.logOut()}"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="weather"
+            type="com.example.database.entity.Weather" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/gray_bcg"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:tag="layout/current_weather_today_forecast_list_item_0">
+
+
+        <TextView
+            android:id="@+id/list_item_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:tag="binding_1"
+            android:text="@{weather.clock}"
+            android:textColor="@color/gray"
+            tools:text="2 pm" />
+        <!--From 5 wednesday 14:00 to just 14:00         -->
+
+        <ImageView
+            android:id="@+id/list_item_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="3dp"
+            android:src="@drawable/ic_home_black_24dp" />
+
+        <TextView
+            android:id="@+id/list_item_temp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:tag="binding_2"
+            android:text="@{weather.temperature}"
+            android:textColor="@color/gray"
+            tools:text="31 C" />
+
+    </LinearLayout>
+</layout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.HomeActivity" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+    </style>
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="colorSurface">@color/lighter_purple</item>
+        <item name="colorOnSurfaceVariant">@color/lighter_purple</item>
+        <item name="itemTextColor">@color/lighter_purple</item>
+        <item name="itemIconTint">@color/lighter_purple</item>
+    </style>
+
+    <style name="PurpleLinearLayout">
+        <item name="android:background">@color/lighter_purple</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingHorizontal">10dp</item>
+        <item name="android:paddingVertical">5dp</item>
+    </style>
+
+    <style name="SettingsLinearItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/lighter_gray</item>
+    </style>
+
+    <style name="SettingsLinearItemRight" parent="SettingsLinearItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:drawableEnd">@drawable/ic_home_black_24dp</item>
+        <item name="android:gravity">end</item>
+    </style>
+
+
+</resources>

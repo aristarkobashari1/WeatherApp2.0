@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation2"
+    app:startDestination="@+id/navigation_current_weather">
+
+    <fragment
+        android:id="@+id/navigation_current_weather"
+        android:name="com.example.feature.ui.current_weather.CurrentWeatherFragment"
+        android:label="Current weather"
+        tools:layout="@layout/fragment_current_weather" >
+    <argument
+        android:name="latitude"
+        android:defaultValue="0.0"
+        app:argType="string" />
+
+    <argument
+        android:name="longitude"
+        android:defaultValue="0.0"
+        app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_weather_list"
+        android:name="com.example.feature.ui.weather_list.WeatherListFragment"
+        android:label="Weather List"
+        tools:layout="@layout/fragment_weather_list" >
+
+        <action
+            android:id="@+id/navigate_to_current_weather"
+            app:destination="@id/navigation_current_weather" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.feature.ui.profile.Profile"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
+</navigation>

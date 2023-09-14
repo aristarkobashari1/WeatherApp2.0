@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="weather"
+            type="com.example.database.entity.Weather" />
+        <variable
+            name="clickListener"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="longClickListener"
+            type="android.view.View.OnLongClickListener" />
+    </data>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/purple_bcg"
+    android:layout_margin="5dp"
+    android:paddingVertical="10dp"
+    android:paddingHorizontal="7dp"
+    android:onClick="@{clickListener}"
+    android:onLongClick="@{longClickListener}"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Wed 30, July"
+        android:text="@{weather.time}"
+        android:id="@+id/time"
+        android:textColor="@color/lighter_gray"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Berlin"
+        android:text="@{weather.location}"
+        android:drawableStart="@drawable/ic_home_black_24dp"
+        android:drawablePadding="7dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="20dp"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="5dp"
+        android:textSize="15sp"
+        android:background="@drawable/gray_bcg"
+        android:maxLines="1"
+        android:maxWidth="100dp"
+        android:ellipsize="end"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@{weather.temperature}"
+        app:layout_constraintTop_toBottomOf="@id/time"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="32 Celsius"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="@color/lighter_gray"
+        android:layout_marginTop="15dp"
+        android:id="@+id/temperature"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="3dp"
+        android:layout_height="60dp"
+        android:background="@color/lighter_gray"
+        app:layout_constraintStart_toEndOf="@id/temperature"
+        app:layout_constraintTop_toBottomOf="@id/time"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="30dp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/description"
+        android:text="@{weather.description}"
+        tools:text="Sunny"
+        android:drawableStart="@drawable/ic_home_black_24dp"
+        app:layout_constraintTop_toTopOf="@id/divider"
+        app:layout_constraintStart_toEndOf="@id/divider"
+        android:textColor="@color/lighter_gray"
+        android:layout_marginStart="30dp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/clock"
+        android:text="@{weather.time}"
+        tools:text="Sunny"
+        android:drawableStart="@drawable/ic_home_black_24dp"
+        app:layout_constraintTop_toBottomOf="@id/description"
+        app:layout_constraintStart_toEndOf="@id/divider"
+        android:textColor="@color/lighter_gray"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="30dp"/>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
