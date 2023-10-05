@@ -15,11 +15,12 @@ import com.example.common.makeToastShort
 import com.example.model.Coord
 import com.example.feature.util.observeNavigation
 import com.example.database.entity.Weather
-import com.example.database.entity.nothingFound
 import com.example.feature.city
 import com.example.feature.databinding.FragmentWeatherListBinding
+import com.example.feature.maps.GeoCodeHelpers
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -28,6 +29,7 @@ class WeatherListFragment : Fragment() {
 
     private lateinit var viewBinding: FragmentWeatherListBinding
     private val viewModel: WeatherListViewModel by activityViewModels()
+    private lateinit var geoCodeHelpers: GeoCodeHelpers
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +43,7 @@ class WeatherListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        geoCodeHelpers = GeoCodeHelpers(requireActivity())
         observeNavigation(viewModel)
         initFlows()
         searchCity()
@@ -49,12 +52,8 @@ class WeatherListFragment : Fragment() {
     private fun initFlows() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                launch { viewModel.cityResult.collectLatest {
-                        if(it==null) requireContext().makeToastShort("Nothing found")
-                    }
-                }
                 launch{ viewModel.weatherListDB.collectLatest { list ->
-                        if (list.isNotEmpty()) setUpCityAdapter(list)
+                        if (list.isNotEmpty()) setUpCityAdapter(list.sortedByDescending {it.id })
                     }
                 }
             }
@@ -65,7 +64,12 @@ class WeatherListFragment : Fragment() {
     private fun searchCity() {
         viewBinding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.onSearchTextChange(viewBinding.searchEditText.text.toString())
+                val latLong =geoCodeHelpers.getLocationFromAddress( viewBinding.searchEditText.text.toString())
+                if (latLong != null) {
+                    viewModel.inputCoords.update { Coord(latLong.lat,latLong.lon)}
+                }else{
+                    requireContext().makeToastShort("No city found")
+                }
                 true
             } else false
         }

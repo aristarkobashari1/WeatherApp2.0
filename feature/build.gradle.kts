@@ -46,6 +46,9 @@ android {
 dependencies {
 
     implementation(Dependencies.Hilt.hiltAndroid)
+    implementation("androidx.test:monitor:1.6.1")
+    implementation("androidx.test.ext:junit-ktx:1.1.5")
+    androidTestImplementation("junit:junit:4.12")
     kapt(Dependencies.Hilt.hiltAndroidCompiler)
     Dependencies.AndroidUI.libs.forEach { implementation(it) }
     Dependencies.AndroidX.libs.forEach { implementation(it) }
@@ -67,6 +70,10 @@ dependencies {
     implementation("com.airbnb.android:epoxy-databinding:$epoxyVersion")
     implementation("com.airbnb.android:epoxy-paging3:$epoxyVersion")
     kapt("com.airbnb.android:epoxy-processor:$epoxyVersion")
+
+
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
 
 
 }

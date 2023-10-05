@@ -1,15 +1,17 @@
 package com.example.feature.ui.weather_list
 
 import androidx.lifecycle.viewModelScope
-import com.example.model.Coord
 import com.example.data.repository.PreferencesRepository
 import com.example.data.repository.WeatherRepository
-import com.example.database.entity.Weather
 import com.example.feature.navigation.NavigationViewModel
+import com.example.model.Coord
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,28 +20,20 @@ class WeatherListViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository
 ) : NavigationViewModel() {
 
-    val weatherListDB = weatherRepository.getWeatherListFromDB()
+    val inputCoords= MutableStateFlow(Coord())
 
-    private val city= MutableStateFlow("")
-
-    fun onSearchTextChange(text: CharSequence?) {
-        text?.let { query ->
-            city.update {query.toString()}
-        }
-    }
-
-    private val searchedCity = city.flatMapLatest {
-        if(it.isNotEmpty())
-            weatherRepository.getSearchedCity(it.lowercase(Locale.ROOT))
+    private val searchedCity = inputCoords.flatMapLatest {
+        if(it.lat!=0.0 && it.lon!==0.0)
+            weatherRepository.getSearchedCity(coord = it)
         else
             emptyFlow()
     }
 
-    val cityResult = searchedCity.map{ it }.distinctUntilChanged().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = Weather()
-    )
+    init {
+        searchedCity.launchIn(viewModelScope)
+    }
+
+    val weatherListDB = weatherRepository.getWeatherListFromDB()
 
     fun setDefaultCity(coords: Coord) = viewModelScope.launch {
         coords.apply {

@@ -15,9 +15,11 @@ interface WeatherDao {
 
     @Query("SELECT * FROM weather_table")
     fun getAllWeather(): Flow<List<Weather>>
+    @Query("SELECT * FROM weather_table WHERE latitude=:latitude AND longitude=:longitude")
+    fun getWeather(latitude: String, longitude: String): Flow<Weather>
 
-    @Query("SELECT EXISTS (SELECT 1 FROM weather_table WHERE LOWER(location) = LOWER(:city) LIMIT 1)")
-    fun doesWeatherExist(city: String): Flow<Boolean>
+    @Query("SELECT EXISTS (SELECT 1 FROM weather_table WHERE location=:location LIMIT 1)")
+    fun doesWeatherExist(location:String): Flow<Boolean>
 
 
 }

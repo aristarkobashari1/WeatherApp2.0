@@ -33,5 +33,8 @@ fun Double.toCelcius(): String{
 fun Context.makeToastShort(text:String){
     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 }
+fun Context.makeToastLong(text:String){
+    Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+}
 
 fun Pair<Double,Double>.isZero()= first==0.0 && second==0.0

@@ -90,6 +90,17 @@ object Dependencies {
             get() = listOf(room, roomCompiler, roomCommon)
     }
 
+    object Test: Group{
+        const val junit = "junit:junit:4.13"
+        const val testJunit = "androidx.test.ext:junit:1.1.5"
+        const val espresso = "androidx.test.espresso:espresso-core:3.5.1"
+        const val truth = "com.google.truth:truth:1.0.1"
+
+        override val libs: List<String>
+            get() = TODO("Not yet implemented")
+
+    }
+
 
 
 }

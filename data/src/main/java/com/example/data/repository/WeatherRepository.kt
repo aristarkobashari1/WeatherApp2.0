@@ -13,13 +13,15 @@ interface WeatherRepository {
 
     fun getWeeklyWeather(coord: Coord): Flow<List<Weather>>
 
-    fun getSearchedCity(city: String): Flow<Weather?>
+    fun getSearchedCity(coord: Coord): Flow<Weather?>
 
     suspend fun insertWeatherToDB(weather: Weather)
 
     fun getWeatherListFromDB(): Flow<List<Weather>>
 
-    fun doesWeatherExist(city:String): Flow<Boolean>
+    fun getWeather(coord: Coord): Flow<Weather>
+
+    fun doesWeatherExist(location:String): Flow<Boolean>
 
     fun getCity(coord: Coord): Flow<String>
 
