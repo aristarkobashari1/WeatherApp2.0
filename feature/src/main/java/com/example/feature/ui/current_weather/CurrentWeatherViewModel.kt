@@ -25,8 +25,8 @@ class CurrentWeatherViewModel @Inject constructor(
 
     fun setDefaultPreferences() { //set Default Language,Unit
         viewModelScope.launch {
-            preferencesRepository.setLanguage(Language.ENG.name)
-            preferencesRepository.setUnits(Units.METRIC.name)
+            preferencesRepository.setLanguage(Language.ENG.lang)
+            preferencesRepository.setUnits(Units.METRIC.value)
         }
     }
 
@@ -45,7 +45,7 @@ class CurrentWeatherViewModel @Inject constructor(
     val dataStoreDefaultCity =preferencesRepository.getDefaultCity().stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5_000),
-        null
+        Pair("",Coord())
     )
 
     val locationData: MutableStateFlow<Coord> = MutableStateFlow(Coord(0.0,0.0))

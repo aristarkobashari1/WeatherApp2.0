@@ -7,6 +7,10 @@
             type="com.example.database.entity.Weather" />
 
         <variable
+            name="tempUnit"
+            type="String" />
+
+        <variable
             name="clickListener"
             type="android.view.View.OnClickListener" />
 
@@ -49,7 +53,7 @@
             android:layout_marginEnd="5dp"
             android:textColor="@color/black"
             tools:text="28 C"
-            android:text="@{weekWeather.temperature}"/>
+            android:text="@{weekWeather.temperature+tempUnit}"/>
 
     </LinearLayout>
 </layout>

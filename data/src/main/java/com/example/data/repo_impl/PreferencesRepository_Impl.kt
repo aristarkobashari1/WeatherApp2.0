@@ -36,6 +36,13 @@ class AppPreferencesRepository @Inject constructor(
         }
     }
 
+    override suspend fun setLoggedUser(email: String, name: String) {
+        userDataStorePreferences.edit { preferences->
+            preferences[KEY_EMAIL] = email
+            preferences[KEY_NAME] = name
+        }
+    }
+
     override fun getDefaultCity(): Flow<Pair<String, Coord>> = flow {
         userDataStorePreferences.data.collect { preference->
                 val coordinates = Coord(lat = preference[KEY_DEFAULT_CITY_LAT]?:-1.0, lon = preference[KEY_DEFAULT_CITY_LON]?:-1.0)
@@ -55,11 +62,27 @@ class AppPreferencesRepository @Inject constructor(
         }
     }
 
+    override fun getLoggedUser(): Flow<Pair<String, String>> = flow{
+        userDataStorePreferences.data.collect{preference->
+            emit(Pair(preference[KEY_NAME]?:"",preference[KEY_EMAIL]?:""))
+
+        }
+    }
+
+    override suspend fun clearLoggedUser() {
+        userDataStorePreferences.edit { preferences->
+            preferences.remove(KEY_EMAIL)
+            preferences.remove(KEY_NAME)
+        }
+    }
+
     private companion object {
         val KEY_DEFAULT_CITY_LAT = doublePreferencesKey(name = "default_city_lat")
         val KEY_DEFAULT_CITY_LON = doublePreferencesKey(name = "default_city_lon")
         val KEY_LANG = stringPreferencesKey(name="language")
         val KEY_UNIT = stringPreferencesKey(name="unit")
         val KEY_CITY = stringPreferencesKey(name="city")
+        val KEY_EMAIL = stringPreferencesKey(name="email")
+        val KEY_NAME = stringPreferencesKey(name="name")
     }
 }

@@ -1,8 +1,8 @@
 package com.example.network.services
 
+import com.example.common.Api
 import com.example.model.CurrentWeatherResponse
 import com.example.model.HourlyWeatherResponse
-import org.intellij.lang.annotations.Language
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -14,7 +14,7 @@ interface WeatherService {
         @Query("lon") long: Double,
         @Query("lang") language: String,
         @Query("units") units: String,
-        @Query("appid") appId: String = APIKEY.API_KEY,
+        @Query("appid") appId: String = Api.API_KEY,
         ): CurrentWeatherResponse
 
 
@@ -24,10 +24,7 @@ interface WeatherService {
         @Query("lon") long: Double,
         @Query("lang") language: String = "sq",
         @Query("units") units: String = "metric",
-        @Query("appid") appId: String = APIKEY.API_KEY
+        @Query("appid") appId: String = Api.API_KEY
     ): HourlyWeatherResponse
 }
 
-object APIKEY {
-    const val API_KEY = "c18b263ccb35b8c930c109b9edc01349"
-}

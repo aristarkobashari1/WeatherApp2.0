@@ -14,7 +14,7 @@ class WeatherRepositoryImpl @Inject constructor(
     private val weatherDao: WeatherDao
 ) : WeatherRepository {
 
-    private val lang = "al" //later save them to shared pref
+    private val lang = "sq" //later save them to shared pref
     private val units = "metric"
 
     override fun getCurrentWeather(coord: Coord) = flow {
@@ -27,7 +27,7 @@ class WeatherRepositoryImpl @Inject constructor(
 
     override fun getWeeklyWeather(coord: Coord) = flow {
         val list = mutableListOf<Weather>()
-        repeat(10) {
+        repeat(7) {
             list.add(weatherService.getCurrentWeather(coord.lat, coord.lon, lang, units).mapToWeatherEntity())
         }
         emit(list)

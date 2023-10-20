@@ -17,4 +17,9 @@ interface PreferencesRepository {
 
     fun getUnit(): Flow<String>
 
+    suspend fun setLoggedUser(email:String, name:String)
+
+    fun getLoggedUser(): Flow<Pair<String,String>>
+
+    suspend fun clearLoggedUser()
 }

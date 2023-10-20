@@ -24,12 +24,6 @@ fun Int.getClockFromTimestamp(): String {
     return dateTime.format(dateFormatter)
 }
 
-fun Double.toCelcius(): String{
-    val temperatureInKelvin = 293.15 // Replace with your double value
-    val temperatureInCelsius = temperatureInKelvin - 273.15
-    return String.format("%.1f℃", temperatureInCelsius)
-}
-
 fun Context.makeToastShort(text:String){
     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 }

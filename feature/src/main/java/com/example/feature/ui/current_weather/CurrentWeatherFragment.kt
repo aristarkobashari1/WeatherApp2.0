@@ -15,6 +15,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.epoxy.carousel
+import com.example.common.Geocode
+import com.example.common.Units
 import com.example.common.makeToastShort
 import com.example.data.model.mapToWeatherEntity
 import com.example.database.entity.Weather
@@ -80,7 +82,7 @@ class CurrentWeatherFragment : Fragment() {
                     when (val hourlyUiState = uiState.hourlyWeatherUiState) {
                         is HourlyWeatherUiState.Error -> requireContext().makeToastShort(hourlyUiState.throwable.toString())
                         HourlyWeatherUiState.Loading -> {}
-                        is HourlyWeatherUiState.Success -> setUpHourlyRecyclerView(hourlyUiState.data.list.mapToWeatherEntity())
+                        is HourlyWeatherUiState.Success -> setUpHourlyRecyclerView(hourlyUiState.data.list.sortedBy { id }.mapToWeatherEntity())
                     }
 
                     when (val weeklyUiState = uiState.weeklyWeatherUiState) {
@@ -92,7 +94,7 @@ class CurrentWeatherFragment : Fragment() {
 
                 launch {
                     viewModel.dataStoreDefaultCity.collectLatest { defaultCity->
-                        if(defaultCity!=null)
+                        if(defaultCity.second!=Coord(-1.0,-1.0))
                             viewModel.locationData.update { defaultCity.second }
                         else
                             initLocation()
@@ -101,6 +103,24 @@ class CurrentWeatherFragment : Fragment() {
 
                 launch { viewModel.preferences.collectLatest {
                     if(it ==PreferenceModel()) viewModel.setDefaultPreferences()
+                    if(it.unit.isNotEmpty()) {
+                        when (it.unit){
+                            Units.METRIC.value -> viewBinding.apply {
+                                    tempUnit = Units.CELCIUS.value
+                                    speedUnit = Units.METRE.value
+                            }
+                            Units.IMPERIAL.value -> viewBinding.apply {
+                                tempUnit = Units.FAHRENHEIT.value
+                                speedUnit = Units.MILES.value
+                            }
+                            Units.KELVIN.value -> viewBinding.apply {
+                                tempUnit = Units.KELVIN.value
+                                speedUnit = Units.METRE.value
+                            }
+
+                        }
+                    }
+
                 }
                 }
             }
@@ -116,7 +136,7 @@ class CurrentWeatherFragment : Fragment() {
         hourlyRV.withModels {
             carousel {
                 id(UUID.randomUUID().toString())
-                models(list.modelToEpoxy())
+                models(list.modelToEpoxy(viewBinding.tempUnit?:""))
             }
         }
     }
@@ -129,6 +149,7 @@ class CurrentWeatherFragment : Fragment() {
                 this.currentWeatherWeekForecast {
                     id(UUID.randomUUID().toString())
                     weekWeather(it)
+                    tempUnit(viewBinding.tempUnit)
                     clickListener(View.OnClickListener {
                         requireContext().makeToastShort("click")
                     })
@@ -151,7 +172,7 @@ class CurrentWeatherFragment : Fragment() {
         grantResults: IntArray
     ) {
         when (requestCode) {
-            GeoCodeHelpers.LOCATION_PERMISSION_REQUEST_CODE -> {
+            Geocode.LOCATION_PERMISSION_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     geocoder.requestSingleLocation()
                  else {

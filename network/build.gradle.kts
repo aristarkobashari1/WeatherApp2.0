@@ -37,11 +37,13 @@ android {
 
 dependencies {
 
+    implementation(project(Dependencies.Modules.common))
 
     Dependencies.Retrofit.libs.forEach { implementation(it) }
     implementation(project(Dependencies.Modules.model))
 
     implementation(Dependencies.Hilt.hiltAndroid)
     kapt(Dependencies.Hilt.hiltAndroidCompiler)
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 
 }

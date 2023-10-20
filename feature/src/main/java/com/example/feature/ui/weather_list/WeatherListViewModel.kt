@@ -37,8 +37,8 @@ class WeatherListViewModel @Inject constructor(
 
     fun setDefaultCity(coords: Coord) = viewModelScope.launch {
         coords.apply {
-            weatherRepository.getCity(coords).collectLatest { city->
-                preferencesRepository.setCity(city, coords)
+            weatherRepository.getCity(this).collectLatest { city->
+                preferencesRepository.setCity(city, this)
             }
         }
         displaySelectedWeather(coords)

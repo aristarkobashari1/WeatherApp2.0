@@ -18,7 +18,8 @@ data class Weather(
     val clock: String? = "",
     val location: String? = "",
     val latitude: String? = "",
-    val longitude: String? = ""
+    val longitude: String? = "",
+    val iconCode: String? = ""
 )
 
 fun Weather.nothingFound(): Boolean {

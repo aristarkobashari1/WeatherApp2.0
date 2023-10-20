@@ -4,6 +4,12 @@
         <variable
             name="weather"
             type="com.example.database.entity.Weather" />
+        <variable
+            name="tempUnit"
+            type="String" />
+        <variable
+            name="speedUnit"
+            type="String" />
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,7 +53,7 @@
             android:textSize="32sp"
             android:layout_marginTop="10dp"
             tools:text="32 Celciues"
-            android:text="@{weather.temperature}"
+            android:text="@{weather.temperature + tempUnit}"
             android:textColor="@color/black"/>
 
         <TextView
@@ -62,7 +68,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:layout_marginHorizontal="15dp"
             android:orientation="horizontal">
 
             <TextView
@@ -72,7 +77,8 @@
                 android:textSize="12sp"
                 tools:text="13%"
                 android:text="@{weather.rain}"
-                android:drawableStart="@drawable/ic_home_black_24dp" />
+                tools:drawableStart="@drawable/ic_home_black_24dp"
+                app:loadDrawable="@{`09d`}"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -80,8 +86,9 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 tools:text="20 km/h"
-                android:text="@{weather.windSpeed}"
-                android:drawableStart="@drawable/ic_home_black_24dp" />
+                android:text="@{weather.windSpeed + speedUnit}"
+                tools:drawableStart="@drawable/ic_home_black_24dp"
+                app:loadDrawable="@{`50d`}"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -89,8 +96,9 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 tools:text="17.43"
-                android:text="@{weather.tempMin}"
-                android:drawableStart="@drawable/ic_home_black_24dp" />
+                android:text="@{weather.tempMin + tempUnit}"
+                tools:drawableStart="@drawable/ic_home_black_24dp"
+                android:drawableStart="@drawable/ic_arrow_low"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -98,8 +106,9 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 tools:text="21.45"
-                android:text="@{weather.tempMax}"
-                android:drawableStart="@drawable/ic_home_black_24dp" />
+                android:text="@{weather.tempMax + tempUnit}"
+                tools:drawableStart="@drawable/ic_home_black_24dp"
+                android:drawableStart="@drawable/ic_arrow_high"/>
 
         </LinearLayout>
 
