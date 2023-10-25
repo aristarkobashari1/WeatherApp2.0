@@ -12,6 +12,13 @@
             type="String" />
     </data>
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -36,16 +43,8 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textColor="@color/black"
-            tools:text="Wednesday 24, August"
-            android:text="@{weather.time}"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            tools:text="Wednesday 24, August"
-            android:text="@{weather.location}"/>
+            tools:text="Tirana: Wednesday 24, August"
+            android:text="@{weather.location+ `: ` + weather.time}"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -67,48 +66,72 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingEnd="5dp"
+                tools:src="@drawable/ic_home_black_24dp"
+                app:loadImage="@{`09d`}"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:textSize="12sp"
                 tools:text="13%"
                 android:text="@{weather.rain}"
-                tools:drawableStart="@drawable/ic_home_black_24dp"
-                app:loadDrawable="@{`09d`}"/>
+                android:gravity="center_vertical"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingEnd="5dp"
+                tools:src="@drawable/ic_home_black_24dp"
+                app:loadImage="@{`50d`}"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:textSize="12sp"
                 tools:text="20 km/h"
                 android:text="@{weather.windSpeed + speedUnit}"
-                tools:drawableStart="@drawable/ic_home_black_24dp"
-                app:loadDrawable="@{`50d`}"/>
+                android:gravity="center_vertical"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingEnd="5dp"
+                tools:src="@drawable/ic_home_black_24dp"
+                android:src="@drawable/ic_arrow_low"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:textSize="12sp"
                 tools:text="17.43"
                 android:text="@{weather.tempMin + tempUnit}"
-                tools:drawableStart="@drawable/ic_home_black_24dp"
-                android:drawableStart="@drawable/ic_arrow_low"/>
+                android:gravity="center_vertical"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingEnd="5dp"
+                tools:src="@drawable/ic_home_black_24dp"
+                android:src="@drawable/ic_arrow_high"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:textSize="12sp"
                 tools:text="21.45"
                 android:text="@{weather.tempMax + tempUnit}"
-                tools:drawableStart="@drawable/ic_home_black_24dp"
-                android:drawableStart="@drawable/ic_arrow_high"/>
+                android:gravity="center_vertical"/>
 
         </LinearLayout>
 
@@ -167,4 +190,5 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>

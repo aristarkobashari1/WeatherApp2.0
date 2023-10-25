@@ -20,6 +20,7 @@ import com.example.feature.HomeActivity
 import com.example.feature.databinding.FragmentProfileBinding
 import com.example.feature.util.observeNavigation
 import com.example.model.PreferenceModel
+import com.example.model.Profile
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
@@ -62,7 +63,7 @@ class Profile : Fragment() {
 
     private fun initFlow() {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
                     viewModel.profileData.collectLatest {
                         if(it!= PreferenceModel()){
@@ -72,8 +73,12 @@ class Profile : Fragment() {
                                 language = it.language
                                 profile = it.profile
                             }
-                            if(it.profile?.isProfileEmpty() == true)
-                                viewModel.initSignIn.update { false }
+                            if(it.profile?.isProfileEmpty() == true){
+                                viewBinding.profile = Profile("Not Signed in")
+                                viewModel.initSignIn.update { true }
+                            }
+                            else viewModel.initSignIn.update { false }
+
                         }
 
                     }
@@ -83,7 +88,10 @@ class Profile : Fragment() {
                     viewModel.initSignIn.collectLatest { shouldInitSignIn->
                         viewBinding.logOutText.text = if (shouldInitSignIn) "Log in" else "Log out"
                         viewBinding.logOutText.setOnClickListener {
-                            if (shouldInitSignIn) displaySignIn() else viewModel.signOut()
+                            if (shouldInitSignIn) displaySignIn() else {
+                                oneTapClient.signOut()
+                                viewModel.signOut()
+                            }
                         }
 
                     }
@@ -102,6 +110,7 @@ class Profile : Fragment() {
             .addOnFailureListener(requireActivity() as HomeActivity) { e ->
                 requireContext().makeToastShort(e.localizedMessage)
             }
+//        viewModel.setLoggedUser("aristarko@gmail.com","Aristarko")
     }
 
     private fun handleResultLauncher(){

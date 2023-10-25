@@ -20,13 +20,13 @@
        android:layout_marginHorizontal="5dp"
        android:layout_marginVertical="5dp"
        android:layout_height="wrap_content"
-       android:hint="Search Location...">
+       android:hint=" Search Location...">
 
        <com.google.android.material.textfield.TextInputEditText
            android:id="@+id/search_edit_text"
            android:layout_width="match_parent"
            android:layout_height="match_parent"
-           android:drawableStart="@drawable/ic_home_black_24dp"
+           android:drawableStart="@drawable/ic_search"
            android:imeOptions="actionDone"
            android:singleLine="true"
            />

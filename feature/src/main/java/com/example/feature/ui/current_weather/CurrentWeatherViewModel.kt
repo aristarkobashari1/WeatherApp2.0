@@ -1,5 +1,6 @@
 package com.example.feature.ui.current_weather
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.common.Language
 import com.example.common.Result
@@ -48,18 +49,21 @@ class CurrentWeatherViewModel @Inject constructor(
         Pair("",Coord())
     )
 
-    val locationData: MutableStateFlow<Coord> = MutableStateFlow(Coord(0.0,0.0))
+    val locationData: MutableStateFlow<Pair<Coord, Long>> = MutableStateFlow(Pair(Coord(0.0,0.0),0L))
+        //need to hold a value to trigger changes if the coords dont exists
+        //so the System.currentTimeMillis() to always trigger (especially for the swiperRefresh
 
     private val currentWeatherNetwork = locationData.flatMapLatest { coordinates->
-        weatherRepository.getCurrentWeather(coordinates).asResult()
+        Log.e("Temp",coordinates.toString())
+        weatherRepository.getCurrentWeather(coordinates.first).asResult()
     }
 
     private val weeklyWeatherNetwork = locationData.flatMapLatest { coordinates->
-        weatherRepository.getWeeklyWeather(coordinates).asResult()
+        weatherRepository.getWeeklyWeather(coordinates.first).asResult()
     }
 
     private val hourlyWeatherNetwork = locationData.flatMapLatest{ coordinates->
-        weatherRepository.getHourlyWeather(coordinates).asResult()
+        weatherRepository.getHourlyWeather(coordinates.first).asResult()
     }
 
     val homeState = combine(
@@ -88,11 +92,11 @@ class CurrentWeatherViewModel @Inject constructor(
 
         HomeState(currentUi,hourlyUi,weeklyUi)
     }
-        .distinctUntilChanged { old, new ->
-            old.currentWeatherUIState==new.currentWeatherUIState ||
-            old.hourlyWeatherUiState==new.hourlyWeatherUiState ||
-            old.weeklyWeatherUiState==new.weeklyWeatherUiState
-        }
+//        .distinctUntilChanged { old, new ->
+//            old.currentWeatherUIState==new.currentWeatherUIState ||
+//            old.hourlyWeatherUiState==new.hourlyWeatherUiState ||
+//            old.weeklyWeatherUiState==new.weeklyWeatherUiState
+//        }
         .stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5_000),

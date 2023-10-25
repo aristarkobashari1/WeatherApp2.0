@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.data.repository.PreferencesRepository
 import com.example.model.Coord
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -63,9 +64,8 @@ class AppPreferencesRepository @Inject constructor(
     }
 
     override fun getLoggedUser(): Flow<Pair<String, String>> = flow{
-        userDataStorePreferences.data.collect{preference->
+        userDataStorePreferences.data.collectLatest{preference->
             emit(Pair(preference[KEY_NAME]?:"",preference[KEY_EMAIL]?:""))
-
         }
     }
 

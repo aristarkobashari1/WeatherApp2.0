@@ -9,8 +9,10 @@ import android.location.Geocoder
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.example.common.Geocode
+import com.example.common.makeToastShort
 import com.example.model.Coord
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
 import java.io.IOException
 
 
@@ -23,11 +25,16 @@ class GeoCodeHelpers(
 ) {
 
     private val geocoder = Geocoder(activity)
+
     @SuppressLint("MissingPermission")
     fun requestSingleLocation() {
         fusedClientLocation?.lastLocation?.addOnSuccessListener {
-            val cityName =getCityName(it.latitude,it.longitude)
-            onCityNameObtained?.let { it1 -> it1(cityName,Coord(it.latitude,it.longitude)) }
+            if(it!=null){
+                val cityName =getCityName(it.latitude,it.longitude)
+                onCityNameObtained?.let { it1 -> it1(cityName,Coord(it.latitude,it.longitude)) }
+            }
+        }?.addOnFailureListener {
+            activity.makeToastShort(it.localizedMessage)
         }
     }
 

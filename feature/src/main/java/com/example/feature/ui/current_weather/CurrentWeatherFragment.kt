@@ -3,6 +3,7 @@ package com.example.feature.ui.current_weather
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,21 +29,26 @@ import com.example.feature.util.observeNavigation
 import com.example.model.Coord
 import com.example.model.PreferenceModel
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CurrentWeatherFragment : Fragment() {
 
+    @Inject
+    lateinit var fusedClientLocation: FusedLocationProviderClient
+
     private lateinit var viewBinding: FragmentCurrentWeatherBinding
     private val viewModel: CurrentWeatherViewModel by activityViewModels()
     private val args: CurrentWeatherFragmentArgs by navArgs()
-    private lateinit var fusedClientLocation: FusedLocationProviderClient
     private lateinit var geocoder: GeoCodeHelpers
+
+    private var tempData = Coord()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,15 +64,21 @@ class CurrentWeatherFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeNavigation(viewModel)
 
-        fusedClientLocation = LocationServices.getFusedLocationProviderClient(requireContext())
-        geocoder = GeoCodeHelpers(requireActivity(), fusedClientLocation) { cityName,coords->
-            viewModel.setDefaultCity(cityName, Coord(coords.lat,coords.lon))
-        }
-
         initFlows()
 
+        geocoder = GeoCodeHelpers(requireActivity(), fusedClientLocation) { cityName,coords->
+            viewModel.setDefaultCity(cityName, Coord(coords.lat,coords.lon))
+
+
+        }
+
         if (comingFromWeatherList())
-            viewModel.locationData.update { Coord(args.latitude.toDouble(),args.longitude.toDouble()) }
+            viewModel.locationData.update { Pair(Coord(args.latitude.toDouble(),args.longitude.toDouble()),System.currentTimeMillis()) }
+
+        viewBinding.swipeRefresh.setOnRefreshListener {
+            viewModel.locationData.update { Pair(tempData,System.currentTimeMillis()) }
+            Log.e("Temp",tempData.toString())
+        }
     }
 
     private fun initFlows() {
@@ -76,7 +88,10 @@ class CurrentWeatherFragment : Fragment() {
                     when (val currentUiState = uiState.currentWeatherUIState) {
                         is CurrentWeatherUIState.Error -> requireContext().makeToastShort(currentUiState.throwable.toString())
                         CurrentWeatherUIState.Loading -> {}
-                        is CurrentWeatherUIState.Success -> viewBinding.weather = currentUiState.data
+                        is CurrentWeatherUIState.Success -> {
+                            viewBinding.weather = currentUiState.data
+                            viewBinding.swipeRefresh.isRefreshing = false
+                        }
                     }
 
                     when (val hourlyUiState = uiState.hourlyWeatherUiState) {
@@ -94,8 +109,10 @@ class CurrentWeatherFragment : Fragment() {
 
                 launch {
                     viewModel.dataStoreDefaultCity.collectLatest { defaultCity->
-                        if(defaultCity.second!=Coord(-1.0,-1.0))
-                            viewModel.locationData.update { defaultCity.second }
+                        if(defaultCity.second!=Coord(-1.0,-1.0)){
+                            viewModel.locationData.update { Pair(defaultCity.second,System.currentTimeMillis()) }
+                            tempData = defaultCity.second
+                        }
                         else
                             initLocation()
                 }
@@ -166,6 +183,7 @@ class CurrentWeatherFragment : Fragment() {
         else
             geocoder.requestLocationPermission(this)
     }
+    @SuppressLint("MissingPermission") //we do the check for location permissions before this step
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
