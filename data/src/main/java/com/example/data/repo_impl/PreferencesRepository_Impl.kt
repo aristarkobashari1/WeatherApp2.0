@@ -7,7 +7,9 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.data.repository.PreferencesRepository
 import com.example.model.Coord
+import com.example.model.Profile
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -37,10 +39,11 @@ class AppPreferencesRepository @Inject constructor(
         }
     }
 
-    override suspend fun setLoggedUser(email: String, name: String) {
+    override suspend fun setLoggedUser(email: String, name: String, userImage:String) {
         userDataStorePreferences.edit { preferences->
             preferences[KEY_EMAIL] = email
             preferences[KEY_NAME] = name
+            preferences[KEY_IMAGE] = userImage
         }
     }
 
@@ -63,9 +66,9 @@ class AppPreferencesRepository @Inject constructor(
         }
     }
 
-    override fun getLoggedUser(): Flow<Pair<String, String>> = flow{
+    override fun getLoggedUser(): Flow<Profile> = channelFlow{
         userDataStorePreferences.data.collectLatest{preference->
-            emit(Pair(preference[KEY_NAME]?:"",preference[KEY_EMAIL]?:""))
+            trySend(Profile(preference[KEY_NAME]?:"",preference[KEY_EMAIL]?:"",preference[KEY_IMAGE]?:"")).isSuccess
         }
     }
 
@@ -73,6 +76,7 @@ class AppPreferencesRepository @Inject constructor(
         userDataStorePreferences.edit { preferences->
             preferences.remove(KEY_EMAIL)
             preferences.remove(KEY_NAME)
+            preferences.remove(KEY_IMAGE)
         }
     }
 
@@ -84,5 +88,6 @@ class AppPreferencesRepository @Inject constructor(
         val KEY_CITY = stringPreferencesKey(name="city")
         val KEY_EMAIL = stringPreferencesKey(name="email")
         val KEY_NAME = stringPreferencesKey(name="name")
+        val KEY_IMAGE = stringPreferencesKey(name="image")
     }
 }

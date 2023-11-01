@@ -1,6 +1,7 @@
 package com.example.feature.ui.profile
 
 import android.app.Activity
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,8 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.common.Google
-import com.example.common.makeToastShort
-import com.example.feature.HomeActivity
+import com.example.common.configUnits
 import com.example.feature.databinding.FragmentProfileBinding
 import com.example.feature.util.observeNavigation
 import com.example.model.PreferenceModel
@@ -65,20 +65,20 @@ class Profile : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
-                    viewModel.profileData.collectLatest {
-                        if(it!= PreferenceModel()){
+                    viewModel.profileData.collectLatest {prefModel->
+                        if(prefModel!= PreferenceModel()){
                             viewBinding.apply {
-                                location = it.location
-                                unit = it.unit
-                                language = it.language
-                                profile = it.profile
+                                location = prefModel.location
+                                unit = prefModel.unit
+                                language = prefModel.language
+                                profile = if(prefModel.profile?.isProfileEmpty() == false) prefModel.profile else Profile("Not Signed in")
                             }
-                            if(it.profile?.isProfileEmpty() == true){
-                                viewBinding.profile = Profile("Not Signed in")
-                                viewModel.initSignIn.update { true }
-                            }
-                            else viewModel.initSignIn.update { false }
 
+                            val units = prefModel.unit.takeIf { it.isNotEmpty() }?.configUnits()
+                            viewBinding.tempUnit = units?.first
+                            viewBinding.speedUnit = units?.second
+
+                            viewModel.initSignIn.update { prefModel.profile?.isProfileEmpty() == true }
                         }
 
                     }
@@ -101,16 +101,17 @@ class Profile : Fragment() {
     }
 
     private fun displaySignIn(){
-        oneTapClient.beginSignIn(signInRequest)
-            .addOnSuccessListener(requireActivity() as HomeActivity) { result ->
-                resultFlag = Google.RC_SIGN_IN
-                val intentSenderRequest = IntentSenderRequest.Builder(result.pendingIntent.intentSender).build()
-                activityResultLauncher.launch(intentSenderRequest)
-            }
-            .addOnFailureListener(requireActivity() as HomeActivity) { e ->
-                requireContext().makeToastShort(e.localizedMessage)
-            }
-//        viewModel.setLoggedUser("aristarko@gmail.com","Aristarko")
+//        oneTapClient.beginSignIn(signInRequest)
+//            .addOnSuccessListener(requireActivity() as HomeActivity) { result ->
+//                resultFlag = Google.RC_SIGN_IN
+//                val intentSenderRequest = IntentSenderRequest.Builder(result.pendingIntent.intentSender).build()
+//                activityResultLauncher.launch(intentSenderRequest)
+//            }
+//            .addOnFailureListener(requireActivity() as HomeActivity) { e ->
+//                requireContext().makeToastShort(e.localizedMessage)
+//            }
+        viewModel.setLoggedUser("aristarko@gmail.com","Aristarko", Uri.parse("https://assets.materialup.com/uploads/039c280b-4cf2-4188-9c11-5149971666dc/preview.png").toString())
+
     }
 
     private fun handleResultLauncher(){
@@ -120,8 +121,7 @@ class Profile : Fragment() {
                     when(resultFlag){
                         Google.RC_SIGN_IN -> {
                             val credential = oneTapClient.getSignInCredentialFromIntent(result.data)
-                            requireContext().makeToastShort(credential.id)
-                            viewModel.setLoggedUser(credential.id,credential.givenName!!)
+                            viewModel.setLoggedUser(credential.id,credential.givenName!!,credential.profilePictureUri.toString())
                         }
                         else ->{}
                     }

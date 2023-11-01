@@ -21,123 +21,134 @@
             type="String" />
 
         <variable
+            name="tempUnit"
+            type="String" />
+        <variable
+            name="speedUnit"
+            type="String" />
+
+        <variable
             name="profile"
             type="com.example.model.Profile" />
     </data>
 
+
+    
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.profile.NotificationsFragment"
-    android:background="@color/lighter_gray">
+    android:paddingTop="20dp">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/user_image"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        tools:src="@drawable/ic_home_black_24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/profile_banner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/smooth_orange"
-        android:orientation="vertical"
-        android:padding="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Aristarko Bashari"
-            android:text="@{profile.name}"
-            android:textSize="22sp"
-            android:textColor="@color/lighter_gray" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="email@yahoo.com"
-            android:text="@{profile.email}"
-            android:textSize="15sp"
-            android:textColor="@color/lighter_gray"/>
-    </LinearLayout>
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        app:loadImage="@{profile.image}"
+        />
     
-    <LinearLayout
-        android:id="@+id/locationLayout"
-        app:layout_constraintTop_toBottomOf="@id/profile_banner"
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Aristarko Bashari"
+        android:text="@{profile.name}"
+        app:layout_constraintTop_toBottomOf="@id/user_image"
+        app:layout_constraintStart_toStartOf="@id/user_image"
+        app:layout_constraintEnd_toEndOf="@id/user_image"
+        android:padding="8dp"
+        android:background="@drawable/purple_bcg"
+        android:layout_marginTop="-20dp"
+        android:textSize="15sp"
+        />
+    
+    <TextView
+        android:id="@+id/user_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="aristarkobashari1@gmail.com"
+        android:text="@{profile.email}"
+        app:layout_constraintStart_toStartOf="@id/user_image"
+        app:layout_constraintTop_toBottomOf="@id/user_name"
+        tools:drawableStart="@drawable/ic_home_black_24dp"
+        android:drawablePadding="5dp"
+        android:layout_marginTop="20dp"
+        android:textSize="15sp"/>
+    
+    <TextView
+        android:id="@+id/user_location"
+        style="@style/ProfilePreferences"
+        tools:text="Location: Tirana"
+        android:text="@{`Location: `+location}"
+        tools:drawableStart="@drawable/ic_home_black_24dp"
+        app:layout_constraintTop_toBottomOf="@id/user_email"
         app:layout_constraintStart_toStartOf="parent"
-        style="@style/PurpleLinearLayout">
+        android:layout_marginTop="60dp"/>
+    
+    <TextView
+        android:id="@+id/user_language"
+        style="@style/ProfilePreferences"
+        tools:text="Language: EN"
+        android:text="@{`Language: `+language}"
+        tools:drawableStart="@drawable/ic_home_black_24dp"
+        app:layout_constraintTop_toBottomOf="@id/user_location"
+        app:layout_constraintStart_toStartOf="@id/user_location" /> 
+    
+    <TextView
+        android:id="@+id/user_unit"
+        style="@style/ProfilePreferences"
+        tools:text="Unit: METRIC"
+        android:text="@{`Unit: `+unit}"
+        tools:drawableStart="@drawable/ic_home_black_24dp"
+        app:layout_constraintTop_toBottomOf="@id/user_language"
+        app:layout_constraintStart_toStartOf="@id/user_language" />
+    <TextView
+        android:id="@+id/user_temp"
+        style="@style/ProfilePreferences"
+        tools:text="Temp Unit: Celsius"
+        android:text="@{`Temp Unit: `+tempUnit}"
+        tools:drawableStart="@drawable/ic_home_black_24dp"
+        app:layout_constraintTop_toBottomOf="@id/user_unit"
+        app:layout_constraintStart_toStartOf="@id/user_unit" />
+    <TextView
+        android:id="@+id/user_speed_unit"
+        style="@style/ProfilePreferences"
+        tools:text="Speed Unit: Celsius"
+        android:text="@{`Speed Unit: `+speedUnit}"
+        tools:drawableStart="@drawable/ic_home_black_24dp"
+        app:layout_constraintTop_toBottomOf="@id/user_temp"
+        app:layout_constraintStart_toStartOf="@id/user_temp" />
+    
+    <TextView
+        android:id="@+id/user_help"
+        style="@style/ProfilePreferences"
+        android:text="Help"
+        tools:drawableStart="@drawable/ic_home_black_24dp"
+        app:layout_constraintTop_toBottomOf="@id/user_speed_unit"
+        app:layout_constraintStart_toStartOf="@id/user_speed_unit" />
 
-        <TextView
-            style="@style/SettingsLinearItem"
-            tools:text="location" />
+    <View
+        android:id="@+id/seperator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@id/user_help"
+        app:layout_constraintStart_toStartOf="@id/user_help"/>
 
-        <TextView
-            style="@style/SettingsLinearItemRight"
-            tools:text="cairo, Egypt"
-            android:text="@{location}"/>
 
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/languageLayout"
-        app:layout_constraintTop_toBottomOf="@id/locationLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        style="@style/PurpleLinearLayout">
-
-        <TextView
-            style="@style/SettingsLinearItem"
-            tools:text="language" />
-
-        <TextView
-            style="@style/SettingsLinearItemRight"
-            tools:text="EN"
-            android:text="@{language}"
-            />
-
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/unitsLayout"
-        app:layout_constraintTop_toBottomOf="@id/languageLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        style="@style/PurpleLinearLayout">
-
-        <TextView
-            style="@style/SettingsLinearItem"
-            tools:text="units" />
-
-        <TextView
-            style="@style/SettingsLinearItemRight"
-            tools:text="Celcius"
-            android:text="@{unit}"
-            />
-
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/help"
-        app:layout_constraintTop_toBottomOf="@id/unitsLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        style="@style/PurpleLinearLayout">
-
-        <TextView
-            style="@style/SettingsLinearItem"
-            tools:text="Help" />
-
-        <TextView
-            style="@style/SettingsLinearItemRight" />
-
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/log_out"
-        app:layout_constraintTop_toBottomOf="@id/help"
-        app:layout_constraintStart_toStartOf="parent"
-        style="@style/PurpleLinearLayout">
-
-        <TextView
-            android:id="@+id/log_out_text"
-            style="@style/SettingsLinearItemRight"
-            tools:text="Logout" />
-
-        <TextView
-            style="@style/SettingsLinearItemRight" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/log_out_text"
+        style="@style/ProfilePreferences"
+        android:text="Log out"
+        tools:drawableStart="@drawable/ic_home_black_24dp"
+        app:layout_constraintTop_toBottomOf="@id/seperator"
+        app:layout_constraintStart_toStartOf="@id/seperator"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -17,7 +17,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.epoxy.carousel
 import com.example.common.Geocode
-import com.example.common.Units
+import com.example.common.configUnits
 import com.example.common.makeToastShort
 import com.example.data.model.mapToWeatherEntity
 import com.example.database.entity.Weather
@@ -30,7 +30,6 @@ import com.example.model.Coord
 import com.example.model.PreferenceModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -121,23 +120,10 @@ class CurrentWeatherFragment : Fragment() {
                 launch { viewModel.preferences.collectLatest {
                     if(it ==PreferenceModel()) viewModel.setDefaultPreferences()
                     if(it.unit.isNotEmpty()) {
-                        when (it.unit){
-                            Units.METRIC.value -> viewBinding.apply {
-                                    tempUnit = Units.CELCIUS.value
-                                    speedUnit = Units.METRE.value
-                            }
-                            Units.IMPERIAL.value -> viewBinding.apply {
-                                tempUnit = Units.FAHRENHEIT.value
-                                speedUnit = Units.MILES.value
-                            }
-                            Units.KELVIN.value -> viewBinding.apply {
-                                tempUnit = Units.KELVIN.value
-                                speedUnit = Units.METRE.value
-                            }
-
-                        }
+                        val units = it.unit.configUnits()
+                        viewBinding.tempUnit = units.first
+                        viewBinding.speedUnit = units.second
                     }
-
                 }
                 }
             }

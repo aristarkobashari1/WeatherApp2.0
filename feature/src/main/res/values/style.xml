@@ -13,25 +13,38 @@
 
     <style name="PurpleLinearLayout">
         <item name="android:background">@color/lighter_purple</item>
-        <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">horizontal</item>
-        <item name="android:paddingHorizontal">10dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
         <item name="android:paddingVertical">5dp</item>
     </style>
 
     <style name="SettingsLinearItem">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/lighter_gray</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginHorizontal">5dp</item>
+        <item name="android:maxLength">20</item>
     </style>
 
     <style name="SettingsLinearItemRight" parent="SettingsLinearItem">
         <item name="android:layout_width">match_parent</item>
         <item name="android:drawableEnd">@drawable/ic_home_black_24dp</item>
         <item name="android:gravity">end</item>
+    </style>
+
+    <style name="ProfilePreferences" >
+        <item name= "android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawablePadding">5dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:layout_marginHorizontal">10dp</item>
     </style>
 
 

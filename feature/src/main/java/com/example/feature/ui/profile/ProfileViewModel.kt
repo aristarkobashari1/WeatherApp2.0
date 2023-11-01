@@ -5,7 +5,6 @@ import com.example.data.repository.PreferencesRepository
 import com.example.data.repository.WeatherRepository
 import com.example.feature.navigation.NavigationViewModel
 import com.example.model.PreferenceModel
-import com.example.model.Profile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -36,7 +35,7 @@ class ProfileViewModel @Inject constructor(
         unit,
         loggedUser
     ){ cityRes, langRes, unitRes,loggedUser ->
-        PreferenceModel(cityRes.first,langRes,unitRes, Profile(loggedUser.first,loggedUser.second))
+        PreferenceModel(cityRes.first,langRes,unitRes, loggedUser)
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5_000),
@@ -44,8 +43,8 @@ class ProfileViewModel @Inject constructor(
     )
 
 
-    fun setLoggedUser(email:String, name:String)= viewModelScope.launch {
-        preferencesRepository.setLoggedUser(email, name)
+    fun setLoggedUser(email:String, name:String, userImage:String)= viewModelScope.launch {
+        preferencesRepository.setLoggedUser(email, name, userImage)
     }
 
     fun signOut()= viewModelScope.launch {

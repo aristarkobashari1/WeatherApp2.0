@@ -32,3 +32,13 @@ fun Context.makeToastLong(text:String){
 }
 
 fun Pair<Double,Double>.isZero()= first==0.0 && second==0.0
+
+
+fun String.configUnits():Pair<String,String>{
+    return when (this){
+        Units.METRIC.value -> Pair(Units.CELCIUS.value, Units.METRE.value)
+        Units.IMPERIAL.value -> Pair(Units.FAHRENHEIT.value, Units.MILES.value)
+        Units.KELVIN.value -> Pair(Units.KELVIN.value, Units.METRE.value)
+        else -> Pair(Units.CELCIUS.value, Units.METRE.value)
+    }
+}

@@ -19,6 +19,7 @@
         android:layout_height="match_parent">
 
 
+
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -26,6 +27,18 @@
     android:layout_height="match_parent"
     android:padding="10dp">
 
+<!--    bej nje layout qe ka progressbar dhe back gri when enabled-->
+
+<!--    <ProgressBar-->
+<!--        android:id="@+id/determinateBar"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:progress="25"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        />-->
 
     <LinearLayout
         android:id="@+id/weather_banner"
@@ -74,7 +87,7 @@
                 android:layout_height="match_parent"
                 android:paddingEnd="5dp"
                 tools:src="@drawable/ic_home_black_24dp"
-                app:loadImage="@{`09d`}"/>
+                app:loadWeatherImage="@{`09d`}"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -90,7 +103,7 @@
                 android:layout_height="match_parent"
                 android:paddingEnd="5dp"
                 tools:src="@drawable/ic_home_black_24dp"
-                app:loadImage="@{`50d`}"/>
+                app:loadWeatherImage="@{`50d`}"/>
 
             <TextView
                 android:layout_width="0dp"

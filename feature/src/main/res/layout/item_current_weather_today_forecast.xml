@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:paddingVertical="3dp"
             android:src="@drawable/ic_home_black_24dp"
-            app:loadImage="@{weather.iconCode}"/>
+            app:loadWeatherImage="@{weather.iconCode}"/>
 
         <TextView
             android:id="@+id/list_item_temp"

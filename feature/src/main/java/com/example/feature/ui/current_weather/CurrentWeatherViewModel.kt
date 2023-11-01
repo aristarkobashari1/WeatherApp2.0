@@ -92,11 +92,11 @@ class CurrentWeatherViewModel @Inject constructor(
 
         HomeState(currentUi,hourlyUi,weeklyUi)
     }
-//        .distinctUntilChanged { old, new ->
-//            old.currentWeatherUIState==new.currentWeatherUIState ||
-//            old.hourlyWeatherUiState==new.hourlyWeatherUiState ||
-//            old.weeklyWeatherUiState==new.weeklyWeatherUiState
-//        }
+        .distinctUntilChanged { old, new ->
+            old.currentWeatherUIState==new.currentWeatherUIState ||
+            old.hourlyWeatherUiState==new.hourlyWeatherUiState ||
+            old.weeklyWeatherUiState==new.weeklyWeatherUiState
+        }
         .stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5_000),

@@ -8,13 +8,19 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 
-@BindingAdapter("loadImage")
-fun loadImage(imageView: ImageView, imageUrl: String?) {
+@BindingAdapter("loadWeatherImage")
+fun loadWeatherImage(imageView: ImageView, imageUrl: String?) {
     val openWeatherApiUrl = "https://openweathermap.org/img/wn/${imageUrl}@2x.png"
+    loadImage(imageView,openWeatherApiUrl)
+}
+
+@BindingAdapter("loadImage")
+fun loadImage(imageView: ImageView,imageUrl: String?){
     Glide.with(imageView.context)
-        .load(openWeatherApiUrl)
+        .load(imageUrl)
         .into(imageView)
 }
+
 
 
 @BindingAdapter("loadDrawable")

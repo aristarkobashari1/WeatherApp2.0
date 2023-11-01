@@ -1,6 +1,8 @@
 package com.example.data.repository
 
+import android.net.Uri
 import com.example.model.Coord
+import com.example.model.Profile
 import kotlinx.coroutines.flow.Flow
 
 interface PreferencesRepository {
@@ -17,9 +19,9 @@ interface PreferencesRepository {
 
     fun getUnit(): Flow<String>
 
-    suspend fun setLoggedUser(email:String, name:String)
+    suspend fun setLoggedUser(email:String, name:String, userImage:String)
 
-    fun getLoggedUser(): Flow<Pair<String,String>>
+    fun getLoggedUser(): Flow<Profile>
 
     suspend fun clearLoggedUser()
 }
