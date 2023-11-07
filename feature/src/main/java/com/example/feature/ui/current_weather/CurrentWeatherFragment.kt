@@ -10,9 +10,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.epoxy.carousel
@@ -25,6 +22,7 @@ import com.example.feature.currentWeatherWeekForecast
 import com.example.feature.databinding.FragmentCurrentWeatherBinding
 import com.example.feature.epoxy.modelToEpoxy
 import com.example.feature.maps.GeoCodeHelpers
+import com.example.feature.util.observeFlows
 import com.example.feature.util.observeNavigation
 import com.example.model.Coord
 import com.example.model.PreferenceModel
@@ -32,7 +30,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
@@ -65,73 +62,90 @@ class CurrentWeatherFragment : Fragment() {
 
         initFlows()
 
-        geocoder = GeoCodeHelpers(requireActivity(), fusedClientLocation) { cityName,coords->
-            viewModel.setDefaultCity(cityName, Coord(coords.lat,coords.lon))
-
-
+        geocoder = GeoCodeHelpers(requireActivity(), fusedClientLocation) { cityName, coords ->
+            viewModel.setDefaultCity(cityName, Coord(coords.lat, coords.lon))
         }
 
         if (comingFromWeatherList())
-            viewModel.locationData.update { Pair(Coord(args.latitude.toDouble(),args.longitude.toDouble()),System.currentTimeMillis()) }
+            viewModel.locationData.update {
+                Pair(
+                    Coord(
+                        args.latitude.toDouble(),
+                        args.longitude.toDouble()
+                    ), System.currentTimeMillis()
+                )
+            }
 
         viewBinding.swipeRefresh.setOnRefreshListener {
-            viewModel.locationData.update { Pair(tempData,System.currentTimeMillis()) }
-            Log.e("Temp",tempData.toString())
+            viewModel.locationData.update { Pair(tempData, System.currentTimeMillis()) }
+            Log.e("Temp", tempData.toString())
         }
     }
 
-    private fun initFlows() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                launch { viewModel.homeState.collectLatest { uiState ->
-                    when (val currentUiState = uiState.currentWeatherUIState) {
-                        is CurrentWeatherUIState.Error -> requireContext().makeToastShort(currentUiState.throwable.toString())
-                        CurrentWeatherUIState.Loading -> {}
-                        is CurrentWeatherUIState.Success -> {
-                            viewBinding.weather = currentUiState.data
-                            viewBinding.swipeRefresh.isRefreshing = false
-                        }
-                    }
-
-                    when (val hourlyUiState = uiState.hourlyWeatherUiState) {
-                        is HourlyWeatherUiState.Error -> requireContext().makeToastShort(hourlyUiState.throwable.toString())
-                        HourlyWeatherUiState.Loading -> {}
-                        is HourlyWeatherUiState.Success -> setUpHourlyRecyclerView(hourlyUiState.data.list.sortedBy { id }.mapToWeatherEntity())
-                    }
-
-                    when (val weeklyUiState = uiState.weeklyWeatherUiState) {
-                        is WeeklyWeatherUiState.Error -> requireContext().makeToastShort(weeklyUiState.throwable.toString())
-                        WeeklyWeatherUiState.Loading -> {}
-                        is WeeklyWeatherUiState.Success -> {setUpWeeklyRecyclerView(weeklyUiState.data)}
-                    }
-                } }
-
-                launch {
-                    viewModel.dataStoreDefaultCity.collectLatest { defaultCity->
-                        if(defaultCity.second!=Coord(-1.0,-1.0)){
-                            viewModel.locationData.update { Pair(defaultCity.second,System.currentTimeMillis()) }
-                            tempData = defaultCity.second
-                        }
-                        else
-                            initLocation()
-                }
+    private fun initFlows() = observeFlows({
+            viewModel.homeState.collectLatest { uiState ->
+                when (val currentUiState = uiState.currentWeatherUIState) {
+                    is CurrentWeatherUIState.Error -> requireContext().makeToastShort(
+                        currentUiState.throwable.toString()
+                    )
+                    CurrentWeatherUIState.Loading -> {}
+                    is CurrentWeatherUIState.Success -> viewBinding.weather =
+                        currentUiState.data
                 }
 
-                launch { viewModel.preferences.collectLatest {
-                    if(it ==PreferenceModel()) viewModel.setDefaultPreferences()
-                    if(it.unit.isNotEmpty()) {
-                        val units = it.unit.configUnits()
-                        viewBinding.tempUnit = units.first
-                        viewBinding.speedUnit = units.second
-                    }
+                when (val hourlyUiState = uiState.hourlyWeatherUiState) {
+                    is HourlyWeatherUiState.Error -> requireContext().makeToastShort(
+                        hourlyUiState.throwable.toString()
+                    )
+                    HourlyWeatherUiState.Loading -> {}
+                    is HourlyWeatherUiState.Success -> setUpHourlyRecyclerView(hourlyUiState.data.list.sortedBy { id }
+                        .mapToWeatherEntity())
                 }
+
+                when (val weeklyUiState = uiState.weeklyWeatherUiState) {
+                    is WeeklyWeatherUiState.Error -> requireContext().makeToastShort(
+                        weeklyUiState.throwable.toString()
+                    )
+
+                    WeeklyWeatherUiState.Loading -> {}
+                    is WeeklyWeatherUiState.Success -> {
+                        setUpWeeklyRecyclerView(weeklyUiState.data)
+                    }
                 }
             }
+        }, {
+            viewModel.dataStoreDefaultCity.collectLatest { defaultCity ->
+                if (defaultCity.second != Coord(-1.0, -1.0)) {
+                    viewModel.locationData.update {
+                        Pair(
+                            defaultCity.second,
+                            System.currentTimeMillis()
+                        )
+                    }
+                    tempData = defaultCity.second
+                } else
+                    initLocation()
+            }
+        }, {
+            viewModel.preferences.collectLatest {
+                if (it == PreferenceModel()) viewModel.setDefaultPreferences()
+                if (it.unit.isNotEmpty()) {
+                    val units = it.unit.configUnits()
+                    viewBinding.tempUnit = units.first
+                    viewBinding.speedUnit = units.second
+                }
+            }
+        }, {
+            viewModel.displayLoading.collectLatest {
+                viewBinding.determinateBar.visibility = it
+                viewBinding.swipeRefresh.isRefreshing = it != View.GONE
+            }
         }
+        )
 
-    }
 
-    private fun comingFromWeatherList() = args.latitude.toDouble()!=0.0 && args.longitude.toDouble()!=0.0
+    private fun comingFromWeatherList() =
+        args.latitude.toDouble() != 0.0 && args.longitude.toDouble() != 0.0
 
     private fun setUpHourlyRecyclerView(list: List<Weather>) {
         val hourlyRV = viewBinding.todayWeatherRv
@@ -139,12 +153,12 @@ class CurrentWeatherFragment : Fragment() {
         hourlyRV.withModels {
             carousel {
                 id(UUID.randomUUID().toString())
-                models(list.modelToEpoxy(viewBinding.tempUnit?:""))
+                models(list.modelToEpoxy(viewBinding.tempUnit ?: ""))
             }
         }
     }
 
-    private fun setUpWeeklyRecyclerView(list: List<Weather>){
+    private fun setUpWeeklyRecyclerView(list: List<Weather>) {
         val weeklyRV = viewBinding.forecast7DaysRv
         weeklyRV.layoutManager = LinearLayoutManager(requireContext())
         weeklyRV.withModels {
@@ -163,12 +177,13 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
-    private fun initLocation(){
+    private fun initLocation() {
         if (geocoder.isLocationPermissionGranted())
             geocoder.requestSingleLocation()
         else
             geocoder.requestLocationPermission(this)
     }
+
     @SuppressLint("MissingPermission") //we do the check for location permissions before this step
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -179,9 +194,13 @@ class CurrentWeatherFragment : Fragment() {
             Geocode.LOCATION_PERMISSION_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     geocoder.requestSingleLocation()
-                 else {
-                    Toast.makeText(requireContext(), "Location permission denied", Toast.LENGTH_SHORT).show()
-                    viewModel.setDefaultCity("GLOBE",Coord(0.0,0.0))
+                else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Location permission denied",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    viewModel.setDefaultCity("GLOBE", Coord(0.0, 0.0))
                 }
             }
         }

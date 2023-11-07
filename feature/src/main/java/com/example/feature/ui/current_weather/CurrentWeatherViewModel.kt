@@ -1,6 +1,7 @@
 package com.example.feature.ui.current_weather
 
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.viewModelScope
 import com.example.common.Language
 import com.example.common.Result
@@ -51,7 +52,9 @@ class CurrentWeatherViewModel @Inject constructor(
 
     val locationData: MutableStateFlow<Pair<Coord, Long>> = MutableStateFlow(Pair(Coord(0.0,0.0),0L))
         //need to hold a value to trigger changes if the coords dont exists
-        //so the System.currentTimeMillis() to always trigger (especially for the swiperRefresh
+        //so the System.currentTimeMillis() to always trigger (especially for the swiperRefresh)
+
+    var displayLoading:MutableStateFlow<Int> = MutableStateFlow(View.GONE)
 
     private val currentWeatherNetwork = locationData.flatMapLatest { coordinates->
         Log.e("Temp",coordinates.toString())
@@ -89,6 +92,11 @@ class CurrentWeatherViewModel @Inject constructor(
             is Result.Error -> WeeklyWeatherUiState.Error(weeklyWeatherResult.throwable)
             is Result.Loading -> WeeklyWeatherUiState.Loading
         }
+
+        if(currentUi is CurrentWeatherUIState.Loading || hourlyUi is HourlyWeatherUiState.Loading || weeklyUi is WeeklyWeatherUiState.Loading)
+            displayLoading.update {View.VISIBLE}
+        else
+            displayLoading.update {View.GONE}
 
         HomeState(currentUi,hourlyUi,weeklyUi)
     }

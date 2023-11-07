@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
             name="weather"
@@ -10,198 +12,198 @@
         <variable
             name="speedUnit"
             type="String" />
+        <variable
+            name="viewModel"
+            type="com.example.feature.ui.current_weather.CurrentWeatherViewModel" />
     </data>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
-
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="10dp">
+    android:layout_height="match_parent">
 
-<!--    bej nje layout qe ka progressbar dhe back gri when enabled-->
-
-<!--    <ProgressBar-->
-<!--        android:id="@+id/determinateBar"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:progress="25"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        />-->
-
-    <LinearLayout
-        android:id="@+id/weather_banner"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/purple_bcg"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:paddingVertical="10dp"
-        android:paddingStart="10dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            tools:text="Tirana: Wednesday 24, August"
-            android:text="@{weather.location+ `: ` + weather.time}"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="32sp"
-            android:layout_marginTop="10dp"
-            tools:text="32 Celciues"
-            android:text="@{weather.temperature + tempUnit}"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            tools:text="Sunny"
-            android:text="@{weather.detailDescription}"
-            android:textColor="@color/black"/>
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
         <LinearLayout
+            android:id="@+id/weather_banner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingEnd="5dp"
-                tools:src="@drawable/ic_home_black_24dp"
-                app:loadWeatherImage="@{`09d`}"/>
+            android:background="@drawable/purple_bcg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingVertical="10dp"
+            android:paddingStart="10dp"
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:textSize="12sp"
-                tools:text="13%"
-                android:text="@{weather.rain}"
-                android:gravity="center_vertical"/>
-
-            <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingEnd="5dp"
-                tools:src="@drawable/ic_home_black_24dp"
-                app:loadWeatherImage="@{`50d`}"/>
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                tools:text="Tirana: Wednesday 24, August"
+                android:text="@{weather.location+ `: ` + weather.time}"/>
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:textSize="12sp"
-                tools:text="20 km/h"
-                android:text="@{weather.windSpeed + speedUnit}"
-                android:gravity="center_vertical"/>
-
-            <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingEnd="5dp"
-                tools:src="@drawable/ic_home_black_24dp"
-                android:src="@drawable/ic_arrow_low"/>
+                android:layout_height="wrap_content"
+                android:textSize="32sp"
+                android:layout_marginTop="10dp"
+                tools:text="32 Celciues"
+                android:text="@{weather.temperature + tempUnit}"
+                android:textColor="@color/black"/>
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:textSize="12sp"
-                tools:text="17.43"
-                android:text="@{weather.tempMin + tempUnit}"
-                android:gravity="center_vertical"/>
-
-            <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingEnd="5dp"
-                tools:src="@drawable/ic_home_black_24dp"
-                android:src="@drawable/ic_arrow_high"/>
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                tools:text="Sunny"
+                android:text="@{weather.detailDescription}"
+                android:textColor="@color/black"/>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:textSize="12sp"
-                tools:text="21.45"
-                android:text="@{weather.tempMax + tempUnit}"
-                android:gravity="center_vertical"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingEnd="5dp"
+                    tools:src="@drawable/ic_home_black_24dp"
+                    app:loadWeatherImage="@{`09d`}"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:textSize="12sp"
+                    tools:text="13%"
+                    android:text="@{weather.rain}"
+                    android:gravity="center_vertical"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingEnd="5dp"
+                    tools:src="@drawable/ic_home_black_24dp"
+                    app:loadWeatherImage="@{`50d`}"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:textSize="12sp"
+                    tools:text="20 km/h"
+                    android:text="@{weather.windSpeed + speedUnit}"
+                    android:gravity="center_vertical"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingEnd="5dp"
+                    tools:src="@drawable/ic_home_black_24dp"
+                    android:src="@drawable/ic_arrow_low"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:textSize="12sp"
+                    tools:text="17.43"
+                    android:text="@{weather.tempMin + tempUnit}"
+                    android:gravity="center_vertical"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingEnd="5dp"
+                    tools:src="@drawable/ic_home_black_24dp"
+                    android:src="@drawable/ic_arrow_high"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:textSize="12sp"
+                    tools:text="21.45"
+                    android:text="@{weather.tempMax + tempUnit}"
+                    android:gravity="center_vertical"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/weather_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/weather_banner"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="Weather for today"
+            android:textSize="18sp"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/black"/>
 
-    <TextView
-        android:id="@+id/weather_txt"
+
+        <com.airbnb.epoxy.EpoxyRecyclerView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/today_weather_rv"
+            tools:listitem="@layout/item_current_weather_today_forecast"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/weather_txt"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/forecast_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Forecast for 7 days"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/today_weather_rv"
+            app:layout_constraintBottom_toTopOf="@id/forecast_7_days_rv"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/black"/>
+
+
+        <com.airbnb.epoxy.EpoxyRecyclerView
+            android:id="@+id/forecast_7_days_rv"
+            android:layout_marginVertical="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            tools:listitem="@layout/item_current_weather_week_forecast"
+            tools:itemCount="20"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/forecast_txt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/determinateBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/weather_banner"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="Weather for today"
-        android:textSize="18sp"
-        android:layout_marginTop="15dp"
-        android:textColor="@color/black"/>
-
-
-    <com.airbnb.epoxy.EpoxyRecyclerView
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/today_weather_rv"
-        tools:listitem="@layout/item_current_weather_today_forecast"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/weather_txt"
-        app:layout_constraintStart_toStartOf="parent"
+        android:progress="25"
+        android:layout_gravity="center"
         />
 
-    <TextView
-        android:id="@+id/forecast_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Forecast for 7 days"
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/today_weather_rv"
-        app:layout_constraintBottom_toTopOf="@id/forecast_7_days_rv"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="15dp"
-        android:textColor="@color/black"/>
-
-
-    <com.airbnb.epoxy.EpoxyRecyclerView
-        android:id="@+id/forecast_7_days_rv"
-        android:layout_marginVertical="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        tools:listitem="@layout/item_current_weather_week_forecast"
-        tools:itemCount="20"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/forecast_txt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</FrameLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>
