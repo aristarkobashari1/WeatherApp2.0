@@ -4,7 +4,6 @@ plugins {
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id ("androidx.navigation.safeargs")
-
 }
 
 android {
@@ -15,7 +14,8 @@ android {
         minSdk = Config.minSdk
         targetSdk = Config.targetSdk
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+//        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.example.feature.ui.current_weather.HiltTestRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -47,9 +47,6 @@ android {
 dependencies {
 
     implementation(Dependencies.Hilt.hiltAndroid)
-    implementation("androidx.test:monitor:1.6.1")
-    implementation("androidx.test.ext:junit-ktx:1.1.5")
-    androidTestImplementation("junit:junit:4.12")
     kapt(Dependencies.Hilt.hiltAndroidCompiler)
     Dependencies.AndroidUI.libs.forEach { implementation(it) }
     Dependencies.AndroidX.libs.forEach { implementation(it) }
@@ -57,15 +54,30 @@ dependencies {
     Dependencies.Lifecycle.libs.forEach { implementation(it) }
     Dependencies.Retrofit.libs.forEach { implementation(it) }
 
-//    testImplementation("junit:junit:4.13.2")
-//    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-//    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     implementation(project(Dependencies.Modules.data))
     implementation(project(Dependencies.Modules.common))
     implementation(project(Dependencies.Modules.model))
     implementation(project(Dependencies.Modules.database))
 
+///////////
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
+    testImplementation("com.google.truth:truth:1.1.5")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("io.mockk:mockk:1.13.8")
+
+    androidTestImplementation("com.google.truth:truth:1.1.5")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.datastore:datastore-preferences:1.0.0")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
+
+
+    ///////////
+
+
+    //Todo refactor late
     val epoxyVersion = "5.1.1"
     implementation("com.airbnb.android:epoxy:$epoxyVersion")
     implementation("com.airbnb.android:epoxy-databinding:$epoxyVersion")
@@ -79,6 +91,9 @@ dependencies {
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+    //
+
+
 
 }
 repositories {

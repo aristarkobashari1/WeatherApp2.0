@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CurrentWeatherViewModel @Inject constructor(
-    private val weatherRepository: WeatherRepository,
+    private val weatherRepository: WeatherRepository?,
     private val preferencesRepository: PreferencesRepository
 ) : NavigationViewModel() {
 
@@ -58,15 +58,15 @@ class CurrentWeatherViewModel @Inject constructor(
 
     private val currentWeatherNetwork = locationData.flatMapLatest { coordinates->
         Log.e("Temp",coordinates.toString())
-        weatherRepository.getCurrentWeather(coordinates.first).asResult()
+        weatherRepository!!.getCurrentWeather(coordinates.first).asResult()
     }
 
     private val weeklyWeatherNetwork = locationData.flatMapLatest { coordinates->
-        weatherRepository.getWeeklyWeather(coordinates.first).asResult()
+        weatherRepository!!.getWeeklyWeather(coordinates.first).asResult()
     }
 
     private val hourlyWeatherNetwork = locationData.flatMapLatest{ coordinates->
-        weatherRepository.getHourlyWeather(coordinates.first).asResult()
+        weatherRepository!!.getHourlyWeather(coordinates.first).asResult()
     }
 
     val homeState = combine(
