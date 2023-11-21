@@ -1,9 +1,9 @@
-package com.example.feature.ui.current_weather.di
+package com.example.feature.data.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.example.data.di.userDataStore
+import androidx.datastore.preferences.preferencesDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,9 +12,11 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Named
 import javax.inject.Singleton
 
+val Context.userDataStore: DataStore<Preferences> by preferencesDataStore(name = "test_preferences")
+
 @Module
 @InstallIn(SingletonComponent::class)
-object TestAppModule {
+object TestDataStoreModule {
 
     @Provides
     @Singleton

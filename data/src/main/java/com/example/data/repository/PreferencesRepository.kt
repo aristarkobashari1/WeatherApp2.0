@@ -24,4 +24,6 @@ interface PreferencesRepository {
     fun getLoggedUser(): Flow<Profile>
 
     suspend fun clearLoggedUser()
+
+    suspend fun clearDataStore()
 }

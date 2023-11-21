@@ -12,6 +12,7 @@ import com.example.data.repository.PreferencesRepository
 import com.example.data.repository.WeatherRepository
 import com.example.database.entity.Weather
 import com.example.feature.navigation.NavigationViewModel
+import com.example.model.CurrentWeatherResponse
 import com.example.model.HourlyWeatherResponse
 import com.example.model.PreferenceModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CurrentWeatherViewModel @Inject constructor(
-    private val weatherRepository: WeatherRepository?,
+    private val weatherRepository: WeatherRepository,
     private val preferencesRepository: PreferencesRepository
 ) : NavigationViewModel() {
 
@@ -56,17 +57,30 @@ class CurrentWeatherViewModel @Inject constructor(
 
     var displayLoading:MutableStateFlow<Int> = MutableStateFlow(View.GONE)
 
-    private val currentWeatherNetwork = locationData.flatMapLatest { coordinates->
+    private var currentWeatherNetwork = locationData.flatMapLatest { coordinates->
         Log.e("Temp",coordinates.toString())
-        weatherRepository!!.getCurrentWeather(coordinates.first).asResult()
+        weatherRepository.getCurrentWeather(coordinates.first).asResult()
     }
 
-    private val weeklyWeatherNetwork = locationData.flatMapLatest { coordinates->
-        weatherRepository!!.getWeeklyWeather(coordinates.first).asResult()
+    fun setCurrentWeatherNetwork(weatherResponse: Flow<Weather>) {
+        currentWeatherNetwork = weatherResponse.asResult()
     }
 
-    private val hourlyWeatherNetwork = locationData.flatMapLatest{ coordinates->
-        weatherRepository!!.getHourlyWeather(coordinates.first).asResult()
+
+    private var weeklyWeatherNetwork = locationData.flatMapLatest { coordinates->
+        weatherRepository.getWeeklyWeather(coordinates.first).asResult()
+    }
+
+    fun setWeeklyWeatherNetwork(weeklyWeatherResponse: Flow<List<Weather>>){
+        weeklyWeatherNetwork = weeklyWeatherResponse.asResult()
+    }
+
+    private var hourlyWeatherNetwork = locationData.flatMapLatest{ coordinates->
+        weatherRepository.getHourlyWeather(coordinates.first).asResult()
+    }
+
+    fun setHourlyWeatherNetwork(hourlyWeatherResponse: Flow<HourlyWeatherResponse>){
+        hourlyWeatherNetwork = hourlyWeatherResponse.asResult()
     }
 
     val homeState = combine(

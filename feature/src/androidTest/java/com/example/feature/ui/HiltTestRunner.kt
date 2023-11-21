@@ -1,4 +1,4 @@
-package com.example.feature.ui.current_weather
+package com.example.feature.ui
 
 import android.app.Application
 import android.content.Context

@@ -6,5 +6,4 @@ data class Profile(
     val image:String? = null,
 ){
     fun isProfileEmpty():Boolean = name.isNullOrEmpty() && email.isNullOrEmpty()
-
 }

@@ -80,6 +80,12 @@ class AppPreferencesRepository @Inject constructor(
         }
     }
 
+    override suspend fun clearDataStore() {
+        userDataStorePreferences.edit {
+            it.clear()
+        }
+    }
+
     private companion object {
         val KEY_DEFAULT_CITY_LAT = doublePreferencesKey(name = "default_city_lat")
         val KEY_DEFAULT_CITY_LON = doublePreferencesKey(name = "default_city_lon")

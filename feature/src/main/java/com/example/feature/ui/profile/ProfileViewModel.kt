@@ -26,7 +26,7 @@ class ProfileViewModel @Inject constructor(
     private val defCity= preferencesRepository.getDefaultCity()
     private val lang = preferencesRepository.getLanguage()
     private val unit = preferencesRepository.getUnit()
-    private val loggedUser = preferencesRepository.getLoggedUser()
+     val loggedUser = preferencesRepository.getLoggedUser()
 
 
     val profileData = combine(
@@ -43,8 +43,10 @@ class ProfileViewModel @Inject constructor(
     )
 
 
-    fun setLoggedUser(email:String, name:String, userImage:String)= viewModelScope.launch {
-        preferencesRepository.setLoggedUser(email, name, userImage)
+    fun setLoggedUser(email:String, name:String, userImage:String) {
+        viewModelScope.launch {
+            preferencesRepository.setLoggedUser(email, name, userImage)
+        }
     }
 
     fun signOut()= viewModelScope.launch {

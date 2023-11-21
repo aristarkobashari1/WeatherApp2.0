@@ -3,9 +3,11 @@ package com.example.feature.ui.weather_list
 import androidx.lifecycle.viewModelScope
 import com.example.data.repository.PreferencesRepository
 import com.example.data.repository.WeatherRepository
+import com.example.database.entity.Weather
 import com.example.feature.navigation.NavigationViewModel
 import com.example.model.Coord
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.emptyFlow
@@ -28,6 +30,9 @@ class WeatherListViewModel @Inject constructor(
         else
             emptyFlow()
     }
+
+    fun getSearchedCity() = this.searchedCity
+
 
     init {
         searchedCity.launchIn(viewModelScope)

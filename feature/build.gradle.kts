@@ -15,7 +15,7 @@ android {
         targetSdk = Config.targetSdk
 
 //        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunner = "com.example.feature.ui.current_weather.HiltTestRunner"
+        testInstrumentationRunner = "com.example.feature.ui.HiltTestRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -72,6 +72,9 @@ dependencies {
     androidTestImplementation("androidx.datastore:datastore-preferences:1.0.0")
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44")
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
+    androidTestImplementation(Dependencies.Room.room)
+    kaptAndroidTest(Dependencies.Room.roomCompiler)
+    androidTestImplementation("app.cash.turbine:turbine:0.7.0") //testing flows
 
 
     ///////////

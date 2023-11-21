@@ -5,6 +5,4 @@ data class HourlyWeatherResponse(
     val message: Int,
     val cnt: Int,
     val list: ArrayList<CurrentWeatherResponse>
-){
-    constructor(): this("",0,0, arrayListOf())
-}
+)
