@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.common.Google
 import com.example.common.configUnits
+import com.example.common.makeToastShort
+import com.example.feature.HomeActivity
 import com.example.feature.databinding.FragmentProfileBinding
 import com.example.feature.util.observeFlows
 import com.example.feature.util.observeNavigation
@@ -59,8 +61,7 @@ class Profile : Fragment() {
         handleResultLauncher()
     }
 
-    private fun initFlow() = observeFlows(
-        {
+    private fun initFlow() = observeFlows({
             viewModel.profileData.collectLatest { prefModel ->
                 if (prefModel != PreferenceModel()) {
                     viewBinding.apply {
@@ -92,21 +93,21 @@ class Profile : Fragment() {
 
 
     private fun displaySignIn() {
-//        oneTapClient.beginSignIn(signInRequest)
-//            .addOnSuccessListener(requireActivity() as HomeActivity) { result ->
-//                resultFlag = Google.RC_SIGN_IN
-//                val intentSenderRequest = IntentSenderRequest.Builder(result.pendingIntent.intentSender).build()
-//                activityResultLauncher.launch(intentSenderRequest)
-//            }
-//            .addOnFailureListener(requireActivity() as HomeActivity) { e ->
-//                requireContext().makeToastShort(e.localizedMessage)
-//            }
-        viewModel.setLoggedUser(
-            "aristarko@gmail.com",
-            "Aristarko",
-            Uri.parse("https://assets.materialup.com/uploads/039c280b-4cf2-4188-9c11-5149971666dc/preview.png")
-                .toString()
-        )
+        oneTapClient.beginSignIn(signInRequest)
+            .addOnSuccessListener(requireActivity() as HomeActivity) { result ->
+                resultFlag = Google.RC_SIGN_IN
+                val intentSenderRequest = IntentSenderRequest.Builder(result.pendingIntent.intentSender).build()
+                activityResultLauncher.launch(intentSenderRequest)
+            }
+            .addOnFailureListener(requireActivity() as HomeActivity) { e ->
+                requireContext().makeToastShort(e.localizedMessage)
+            }
+//        viewModel.setLoggedUser(
+//            "aristarko@gmail.com",
+//            "Aristarko",
+//            Uri.parse("https://assets.materialup.com/uploads/039c280b-4cf2-4188-9c11-5149971666dc/preview.png")
+//                .toString()
+//        )
 
     }
 
@@ -125,16 +126,12 @@ class Profile : Fragment() {
                                     credential.profilePictureUri.toString()
                                 )
                             }
-
                             else -> {}
                         }
 
-                    } catch (e: ApiException) {
-                        Log.e("TAG", e.toString())
-                    }
+                    } catch (e: ApiException) { Log.e("TAG", e.toString()) }
                 } else {
                     // Handle failure or cancellation
-                    // You can add your error handling logic here
                 }
             }
     }

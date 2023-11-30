@@ -2,6 +2,7 @@ package com.example.feature.ui.current_weather
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.test.filters.LargeTest
 import androidx.test.filters.MediumTest
 import app.cash.turbine.test
 import com.example.common.Language
@@ -33,7 +34,6 @@ import javax.inject.Named
 
 
 @HiltAndroidTest
-@MediumTest
 @ExperimentalCoroutinesApi
 class CurrentWeatherViewModelTest {
 
@@ -100,7 +100,6 @@ class CurrentWeatherViewModelTest {
     fun preferences_should_return() = runTest {
         withContext(Dispatchers.IO) {
             viewModel.preferences.test {
-                advanceUntilIdle()
                 assertThat(awaitItem()).isNotNull()
                 advanceTimeBy(1000)
                 assertThat(awaitItem()).isEqualTo(PreferenceModel(location = "test_location", language = Language.ENG.lang, unit = Units.METRIC.value, profile = null))

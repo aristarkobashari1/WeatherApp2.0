@@ -21,6 +21,7 @@ import com.example.database.entity.Weather
 import com.example.feature.currentWeatherWeekForecast
 import com.example.feature.databinding.FragmentCurrentWeatherBinding
 import com.example.feature.epoxy.modelToEpoxy
+import com.example.feature.epoxy.setUpGenericAdapter
 import com.example.feature.maps.GeoCodeHelpers
 import com.example.feature.util.observeFlows
 import com.example.feature.util.observeNavigation
@@ -83,65 +84,52 @@ class CurrentWeatherFragment : Fragment() {
     }
 
     private fun initFlows() = observeFlows({
-            viewModel.homeState.collectLatest { uiState ->
-                when (val currentUiState = uiState.currentWeatherUIState) {
-                    is CurrentWeatherUIState.Error -> requireContext().makeToastShort(
-                        currentUiState.throwable.toString()
-                    )
-                    CurrentWeatherUIState.Loading -> {}
-                    is CurrentWeatherUIState.Success -> viewBinding.weather =
-                        currentUiState.data
-                }
-
-                when (val hourlyUiState = uiState.hourlyWeatherUiState) {
-                    is HourlyWeatherUiState.Error -> requireContext().makeToastShort(
-                        hourlyUiState.throwable.toString()
-                    )
-                    HourlyWeatherUiState.Loading -> {}
-                    is HourlyWeatherUiState.Success -> setUpHourlyRecyclerView(hourlyUiState.data.list.sortedBy { id }
-                        .mapToWeatherEntity())
-                }
-
-                when (val weeklyUiState = uiState.weeklyWeatherUiState) {
-                    is WeeklyWeatherUiState.Error -> requireContext().makeToastShort(
-                        weeklyUiState.throwable.toString()
-                    )
-
-                    WeeklyWeatherUiState.Loading -> {}
-                    is WeeklyWeatherUiState.Success -> {
-                        setUpWeeklyRecyclerView(weeklyUiState.data)
-                    }
-                }
+        viewModel.homeState.collectLatest { uiState ->
+            when (val currentUiState = uiState.currentWeatherUIState) {
+                is CurrentWeatherUIState.Error -> requireContext().makeToastShort(currentUiState.throwable.toString())
+                CurrentWeatherUIState.Loading -> {}
+                is CurrentWeatherUIState.Success -> viewBinding.weather = currentUiState.data
             }
-        }, {
-            viewModel.dataStoreDefaultCity.collectLatest { defaultCity ->
-                if (defaultCity.second != Coord(-1.0, -1.0)) {
-                    viewModel.locationData.update {
-                        Pair(
-                            defaultCity.second,
-                            System.currentTimeMillis()
-                        )
-                    }
-                    tempData = defaultCity.second
-                } else
-                    initLocation()
+
+            when (val hourlyUiState = uiState.hourlyWeatherUiState) {
+                is HourlyWeatherUiState.Error -> requireContext().makeToastShort(hourlyUiState.throwable.toString())
+                HourlyWeatherUiState.Loading -> {}
+                is HourlyWeatherUiState.Success -> setUpHourlyRecyclerView(hourlyUiState.data.list.sortedBy { id }
+                    .mapToWeatherEntity())
             }
-        }, {
-            viewModel.preferences.collectLatest {
-                if (it == PreferenceModel()) viewModel.setDefaultPreferences()
-                if (it.unit.isNotEmpty()) {
-                    val units = it.unit.configUnits()
-                    viewBinding.tempUnit = units.first
-                    viewBinding.speedUnit = units.second
-                }
-            }
-        }, {
-            viewModel.displayLoading.collectLatest {
-                viewBinding.determinateBar.visibility = it
-                viewBinding.swipeRefresh.isRefreshing = it != View.GONE
+
+            when (val weeklyUiState = uiState.weeklyWeatherUiState) {
+                is WeeklyWeatherUiState.Error -> requireContext().makeToastShort(weeklyUiState.throwable.toString())
+                WeeklyWeatherUiState.Loading -> {}
+                is WeeklyWeatherUiState.Success -> setUpWeeklyRecyclerView(weeklyUiState.data)
             }
         }
-        )
+    }, {
+        viewModel.dataStoreDefaultCity.collectLatest { defaultCity ->
+            if (defaultCity.second != Coord(-1.0, -1.0)) {
+                viewModel.locationData.update {
+                    Pair(defaultCity.second, System.currentTimeMillis())
+                }
+                tempData = defaultCity.second
+            } else
+                initLocation()
+        }
+    }, {
+        viewModel.preferences.collectLatest {
+            if (it == PreferenceModel()) viewModel.setDefaultPreferences()
+            if (it.unit.isNotEmpty()) {
+                val units = it.unit.configUnits()
+                viewBinding.tempUnit = units.first
+                viewBinding.speedUnit = units.second
+            }
+        }
+    }, {
+        viewModel.displayLoading.collectLatest {
+            viewBinding.determinateBar.visibility = it
+            viewBinding.swipeRefresh.isRefreshing = it != View.GONE
+        }
+    }
+    )
 
 
     private fun comingFromWeatherList() =
@@ -158,23 +146,16 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
-    private fun setUpWeeklyRecyclerView(list: List<Weather>) {
-        val weeklyRV = viewBinding.forecast7DaysRv
-        weeklyRV.layoutManager = LinearLayoutManager(requireContext())
-        weeklyRV.withModels {
-            list.forEach {
-                this.currentWeatherWeekForecast {
-                    id(UUID.randomUUID().toString())
-                    weekWeather(it)
-                    tempUnit(viewBinding.tempUnit)
-                    clickListener(View.OnClickListener {
-                        requireContext().makeToastShort("click")
-                    })
-                }
+    private fun setUpWeeklyRecyclerView(list: List<Weather>) = viewBinding.forecast7DaysRv.setUpGenericAdapter(list, requireContext())
+    { weekWeather, epoxyController ->
+            epoxyController.currentWeatherWeekForecast {
+                id(UUID.randomUUID().toString())
+                weekWeather(weekWeather)
+                tempUnit(viewBinding.tempUnit)
+                clickListener(View.OnClickListener {
+                    requireContext().makeToastShort("click")
+                })
             }
-
-
-        }
     }
 
     private fun initLocation() {

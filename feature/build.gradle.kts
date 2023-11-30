@@ -75,6 +75,13 @@ dependencies {
     androidTestImplementation(Dependencies.Room.room)
     kaptAndroidTest(Dependencies.Room.roomCompiler)
     androidTestImplementation("app.cash.turbine:turbine:0.7.0") //testing flows
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    debugImplementation("androidx.fragment:fragment-testing:1.6.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("com.adevinta.android:barista:4.2.0") {
+        exclude( group= "org.jetbrains.kotlin" )// Only if you already use Kotlin in your project
+    }
+
 
 
     ///////////
