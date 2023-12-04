@@ -2,6 +2,7 @@ package com.example.data.repo_impl
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -47,6 +48,10 @@ class AppPreferencesRepository @Inject constructor(
         }
     }
 
+    override suspend fun setDarkMode(switch: Boolean) {
+        userDataStorePreferences.edit { preferences-> preferences[KEY_DARK_MODE_SWITCH]= switch }
+    }
+
     override fun getDefaultCity(): Flow<Pair<String, Coord>> = flow {
         userDataStorePreferences.data.collect { preference->
                 val coordinates = Coord(lat = preference[KEY_DEFAULT_CITY_LAT]?:-1.0, lon = preference[KEY_DEFAULT_CITY_LON]?:-1.0)
@@ -86,6 +91,12 @@ class AppPreferencesRepository @Inject constructor(
         }
     }
 
+    override fun isDarkModeEnabled(): Flow<Boolean> = flow{
+        userDataStorePreferences.data.collect{preference->
+            emit(preference[KEY_DARK_MODE_SWITCH]?:false)
+        }
+    }
+
     private companion object {
         val KEY_DEFAULT_CITY_LAT = doublePreferencesKey(name = "default_city_lat")
         val KEY_DEFAULT_CITY_LON = doublePreferencesKey(name = "default_city_lon")
@@ -95,5 +106,6 @@ class AppPreferencesRepository @Inject constructor(
         val KEY_EMAIL = stringPreferencesKey(name="email")
         val KEY_NAME = stringPreferencesKey(name="name")
         val KEY_IMAGE = stringPreferencesKey(name="image")
+        val KEY_DARK_MODE_SWITCH = booleanPreferencesKey(name="dark_mode_switch")
     }
 }

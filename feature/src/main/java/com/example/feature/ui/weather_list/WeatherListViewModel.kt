@@ -3,11 +3,10 @@ package com.example.feature.ui.weather_list
 import androidx.lifecycle.viewModelScope
 import com.example.data.repository.PreferencesRepository
 import com.example.data.repository.WeatherRepository
-import com.example.database.entity.Weather
 import com.example.feature.navigation.NavigationViewModel
 import com.example.model.Coord
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.emptyFlow
@@ -16,6 +15,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 @HiltViewModel
 class WeatherListViewModel @Inject constructor(
     private val weatherRepository: WeatherRepository,
@@ -23,10 +23,16 @@ class WeatherListViewModel @Inject constructor(
 ) : NavigationViewModel() {
 
     val inputCoords= MutableStateFlow(Coord())
+    val defaultLanguage = MutableStateFlow("")
+    val defaultUnit = MutableStateFlow("")
+
+
+    val dataStoreLang = preferencesRepository.getLanguage()
+    val dataStoreUnit = preferencesRepository.getUnit()
 
     private val searchedCity = inputCoords.flatMapLatest {
-        if(it.lat!=0.0 && it.lon!==0.0)
-            weatherRepository.getSearchedCity(coord = it)
+        if(it.lat!=0.0 && it.lon!=0.0)
+            weatherRepository.getSearchedCity(coord = it,defaultLanguage.value,defaultUnit.value)
         else
             emptyFlow()
     }

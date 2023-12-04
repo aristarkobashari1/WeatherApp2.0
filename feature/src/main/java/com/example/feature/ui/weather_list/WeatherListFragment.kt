@@ -47,10 +47,16 @@ class WeatherListFragment : Fragment() {
     }
 
     private fun initFlows() = observeFlows({
-            viewModel.weatherListDB.collectLatest { list ->
-                if (list.isNotEmpty()) setUpCityAdapter(list.sortedByDescending { it.id })
-            }
-        })
+        viewModel.weatherListDB.collectLatest { list ->
+            if (list.isNotEmpty()) setUpCityAdapter(list.sortedByDescending { it.id })
+        }
+    }, {
+        viewModel.dataStoreLang.collectLatest { viewModel.defaultLanguage.update { it } }
+    },
+        {
+            viewModel.dataStoreUnit.collectLatest { viewModel.defaultUnit.update { it } }
+        }
+    )
 
 
     private fun searchCity() {
@@ -68,19 +74,32 @@ class WeatherListFragment : Fragment() {
         }
     }
 
-    private fun setUpCityAdapter(list:List<Weather>) = viewBinding.rvCities.setUpGenericAdapter(list,requireContext()){
-            weather, epoxyController -> epoxyController.city {
-                id(UUID.randomUUID().toString())
-                weather(weather)
-                clickListener(View.OnClickListener {
-                    viewModel.displaySelectedWeather(Coord(weather.latitude!!.toDouble(), weather.longitude!!.toDouble()))
-                })
-                longClickListener(View.OnLongClickListener {
-                    requireContext().setUpDialog{
-                        viewModel.setDefaultCity(Coord(weather.latitude!!.toDouble(), weather.longitude!!.toDouble()))
-                    }
-                    true
-                })
-            }
+    private fun setUpCityAdapter(list: List<Weather>) = viewBinding.rvCities.setUpGenericAdapter(
+        list,
+        requireContext()
+    ) { weather, epoxyController ->
+        epoxyController.city {
+            id(UUID.randomUUID().toString())
+            weather(weather)
+            clickListener(View.OnClickListener {
+                viewModel.displaySelectedWeather(
+                    Coord(
+                        weather.latitude!!.toDouble(),
+                        weather.longitude!!.toDouble()
+                    )
+                )
+            })
+            longClickListener(View.OnLongClickListener {
+                requireContext().setUpDialog {
+                    viewModel.setDefaultCity(
+                        Coord(
+                            weather.latitude!!.toDouble(),
+                            weather.longitude!!.toDouble()
+                        )
+                    )
+                }
+                true
+            })
         }
+    }
 }

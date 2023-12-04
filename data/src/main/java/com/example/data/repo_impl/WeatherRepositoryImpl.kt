@@ -14,31 +14,30 @@ class WeatherRepositoryImpl @Inject constructor(
     private val weatherDao: WeatherDao
 ) : WeatherRepository {
 
-    private val lang = "sq" //later save them to shared pref
-    private val units = "metric"
 
-    override fun getCurrentWeather(coord: Coord) = flow {
-        emit(weatherService.getCurrentWeather(coord.lat, coord.lon, lang, units).mapToWeatherEntity())
+
+    override fun getCurrentWeather(coord: Coord,lang:String,unit:String) = flow {
+        emit(weatherService.getCurrentWeather(coord.lat, coord.lon, lang, unit).mapToWeatherEntity())
     }
 
-    override fun getHourlyWeather(coord: Coord) = flow {
-        emit(weatherService.getHourlyWeather(coord.lat, coord.lon, lang, units))
+    override fun getHourlyWeather(coord: Coord,lang:String,unit:String) = flow {
+        emit(weatherService.getHourlyWeather(coord.lat, coord.lon, lang, unit))
     }
 
-    override fun getWeeklyWeather(coord: Coord) = flow {
+    override fun getWeeklyWeather(coord: Coord,lang:String,unit:String) = flow {
         val list = mutableListOf<Weather>()
         repeat(7) {
-            list.add(weatherService.getCurrentWeather(coord.lat, coord.lon, lang, units).mapToWeatherEntity())
+            list.add(weatherService.getCurrentWeather(coord.lat, coord.lon, lang, unit).mapToWeatherEntity())
         }
         emit(list)
     }
 
-    override fun getSearchedCity(coord: Coord) = flow {
+    override fun getSearchedCity(coord: Coord,lang:String,unit:String) = flow {
             val weather = weatherService.getCurrentWeather(
                 coord.lat,
                 coord.lon,
                 lang,
-                units
+                unit
             ).mapToWeatherEntity()
 
             if (!doesWeatherExist(weather.location!!).first())

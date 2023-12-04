@@ -4,7 +4,9 @@ package com.example.common
 
 enum class Language(val lang: String) {
     ENG("en"),
-    ALB("sq")
+    ALB("sq"),
+    IT("it"),
+    GR("el")
 }
 
 enum class Units(val value: String){

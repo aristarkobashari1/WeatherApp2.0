@@ -7,13 +7,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface WeatherRepository {
 
-    fun getCurrentWeather(coord: Coord): Flow<Weather>
+    fun getCurrentWeather(coord: Coord,lang:String,unit:String): Flow<Weather>
 
-    fun getHourlyWeather(coord: Coord): Flow<HourlyWeatherResponse>
+    fun getHourlyWeather(coord: Coord,lang:String,unit:String): Flow<HourlyWeatherResponse>
 
-    fun getWeeklyWeather(coord: Coord): Flow<List<Weather>>
+    fun getWeeklyWeather(coord: Coord,lang:String,unit:String): Flow<List<Weather>>
 
-    fun getSearchedCity(coord: Coord): Flow<Weather?>
+    fun getSearchedCity(coord: Coord,lang:String,unit:String): Flow<Weather?>
 
     suspend fun insertWeatherToDB(weather: Weather)
 

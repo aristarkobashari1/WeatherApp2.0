@@ -1,6 +1,6 @@
 package com.example.feature.util
 
-import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -8,7 +8,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.feature.navigation.NavigationCommand
 import com.example.feature.navigation.NavigationViewModel
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -40,10 +39,7 @@ fun Fragment.observeFlows(
     }
 }
 
-
-fun Context.setUpDialog(yesBlock:()->Unit) = MaterialAlertDialogBuilder(this)
-    .setTitle("Attention")
-    .setMessage("Do you want to set this location as default?")
-    .setPositiveButton("Yes") { _, _ -> yesBlock }
-    .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
-    .show()
+fun changeDarkModeState(isDarkMode:Boolean){
+    if (isDarkMode) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+    else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+}

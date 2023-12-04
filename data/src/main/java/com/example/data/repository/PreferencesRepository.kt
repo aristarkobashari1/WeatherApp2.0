@@ -1,6 +1,5 @@
 package com.example.data.repository
 
-import android.net.Uri
 import com.example.model.Coord
 import com.example.model.Profile
 import kotlinx.coroutines.flow.Flow
@@ -26,4 +25,8 @@ interface PreferencesRepository {
     suspend fun clearLoggedUser()
 
     suspend fun clearDataStore()
+
+    suspend fun setDarkMode(switch: Boolean)
+
+    fun isDarkModeEnabled(): Flow<Boolean>
 }

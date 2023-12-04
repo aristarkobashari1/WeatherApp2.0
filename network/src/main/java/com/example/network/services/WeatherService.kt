@@ -22,8 +22,8 @@ interface WeatherService {
     suspend fun getHourlyWeather(
         @Query("lat") lat: Double,
         @Query("lon") long: Double,
-        @Query("lang") language: String = "sq",
-        @Query("units") units: String = "metric",
+        @Query("lang") language: String,
+        @Query("units") units: String,
         @Query("appid") appId: String = Api.API_KEY
     ): HourlyWeatherResponse
 }

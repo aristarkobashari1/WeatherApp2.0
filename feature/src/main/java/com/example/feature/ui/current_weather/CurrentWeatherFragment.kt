@@ -23,18 +23,21 @@ import com.example.feature.databinding.FragmentCurrentWeatherBinding
 import com.example.feature.epoxy.modelToEpoxy
 import com.example.feature.epoxy.setUpGenericAdapter
 import com.example.feature.maps.GeoCodeHelpers
+import com.example.feature.util.changeDarkModeState
 import com.example.feature.util.observeFlows
 import com.example.feature.util.observeNavigation
 import com.example.model.Coord
 import com.example.model.PreferenceModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import java.util.UUID
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@ExperimentalCoroutinesApi
 class CurrentWeatherFragment : Fragment() {
 
     @Inject
@@ -115,20 +118,23 @@ class CurrentWeatherFragment : Fragment() {
                 initLocation()
         }
     }, {
-        viewModel.preferences.collectLatest {
-            if (it == PreferenceModel()) viewModel.setDefaultPreferences()
-            if (it.unit.isNotEmpty()) {
-                val units = it.unit.configUnits()
+        viewModel.preferences.collectLatest { prefModel ->
+            if (prefModel == PreferenceModel()) viewModel.setDefaultPreferences()
+            if (prefModel.unit.isNotEmpty()) {
+                val units = prefModel.unit.configUnits()
                 viewBinding.tempUnit = units.first
                 viewBinding.speedUnit = units.second
             }
+
+            viewModel.defaultLanguage.update { prefModel.language }
+            viewModel.defaultUnit.update { prefModel.unit }
         }
     }, {
         viewModel.displayLoading.collectLatest {
             viewBinding.determinateBar.visibility = it
             viewBinding.swipeRefresh.isRefreshing = it != View.GONE
         }
-    }
+    }, { viewModel.isDarkModeEnabled.collectLatest { isDarkMode -> changeDarkModeState(isDarkMode) } }
     )
 
 
@@ -146,8 +152,9 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
-    private fun setUpWeeklyRecyclerView(list: List<Weather>) = viewBinding.forecast7DaysRv.setUpGenericAdapter(list, requireContext())
-    { weekWeather, epoxyController ->
+    private fun setUpWeeklyRecyclerView(list: List<Weather>) =
+        viewBinding.forecast7DaysRv.setUpGenericAdapter(list, requireContext())
+        { weekWeather, epoxyController ->
             epoxyController.currentWeatherWeekForecast {
                 id(UUID.randomUUID().toString())
                 weekWeather(weekWeather)
@@ -156,7 +163,7 @@ class CurrentWeatherFragment : Fragment() {
                     requireContext().makeToastShort("click")
                 })
             }
-    }
+        }
 
     private fun initLocation() {
         if (geocoder.isLocationPermissionGranted())

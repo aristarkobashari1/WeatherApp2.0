@@ -23,10 +23,11 @@ class ProfileViewModel @Inject constructor(
 
     val initSignIn = MutableStateFlow(true)
 
-    private val defCity= preferencesRepository.getDefaultCity()
+    private val defCity = preferencesRepository.getDefaultCity()
     private val lang = preferencesRepository.getLanguage()
     private val unit = preferencesRepository.getUnit()
-     val loggedUser = preferencesRepository.getLoggedUser()
+    val loggedUser = preferencesRepository.getLoggedUser()
+    val isDarkModeEnabled = preferencesRepository.isDarkModeEnabled()
 
 
     val profileData = combine(
@@ -34,8 +35,8 @@ class ProfileViewModel @Inject constructor(
         lang,
         unit,
         loggedUser
-    ){ cityRes, langRes, unitRes,loggedUser ->
-        PreferenceModel(cityRes.first,langRes,unitRes, loggedUser)
+    ) { cityRes, langRes, unitRes, loggedUser ->
+        PreferenceModel(cityRes.first, langRes, unitRes, loggedUser)
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5_000),
@@ -43,15 +44,24 @@ class ProfileViewModel @Inject constructor(
     )
 
 
-    fun setLoggedUser(email:String, name:String, userImage:String) {
+    fun setLoggedUser(email: String, name: String, userImage: String) {
         viewModelScope.launch {
             preferencesRepository.setLoggedUser(email, name, userImage)
         }
     }
 
-    fun signOut()= viewModelScope.launch {
+    fun signOut() = viewModelScope.launch {
         preferencesRepository.clearLoggedUser()
         initSignIn.update { true }
     }
+
+    fun setDefaultLanguage(language: String) =
+        viewModelScope.launch { preferencesRepository.setLanguage(language) }
+
+    fun setDefaultUnit(unit: String) =
+        viewModelScope.launch { preferencesRepository.setUnits(unit) }
+
+    fun changeDarkModeStatePref(switchState: Boolean) =
+        viewModelScope.launch { preferencesRepository.setDarkMode(switchState) }
 
 }
