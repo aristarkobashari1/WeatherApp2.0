@@ -11,12 +11,15 @@ import com.example.feature.navigation.NavigationViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-fun Fragment.observeNavigation(navigationViewModel: NavigationViewModel){
+fun Fragment.observeNavigation(navigationViewModel: NavigationViewModel) {
     lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.STARTED){
-            navigationViewModel.navigationCommand.collectLatest {navigationCommand ->
-                when (navigationCommand){
-                    is NavigationCommand.NavigateTo -> findNavController().navigate(navigationCommand.direction)
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            navigationViewModel.navigationCommand.collectLatest { navigationCommand ->
+                when (navigationCommand) {
+                    is NavigationCommand.NavigateTo -> findNavController().navigate(
+                        navigationCommand.direction
+                    )
+
                     is NavigationCommand.NavigateBack -> findNavController().navigateUp()
                 }
             }
@@ -27,7 +30,7 @@ fun Fragment.observeNavigation(navigationViewModel: NavigationViewModel){
 fun Fragment.observeFlows(
     vararg flowBlocks: suspend () -> Unit,
     state: Lifecycle.State = Lifecycle.State.CREATED,
-    ) {
+) {
     lifecycleScope.launch {
         repeatOnLifecycle(state) {
             flowBlocks.forEach { flowBlock ->
@@ -39,7 +42,6 @@ fun Fragment.observeFlows(
     }
 }
 
-fun changeDarkModeState(isDarkMode:Boolean){
-    if (isDarkMode) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-    else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-}
+fun changeDarkModeState(isDarkMode: Boolean) =
+    AppCompatDelegate.setDefaultNightMode(if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+

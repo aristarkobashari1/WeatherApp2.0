@@ -11,7 +11,6 @@ import com.example.model.Coord
 import com.example.model.CurrentWeatherResponse
 import com.example.model.HourlyWeatherResponse
 import com.google.gson.Gson
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
@@ -24,7 +23,7 @@ class FakeWeatherRepositoryImpl(
     lateinit var hourlyWeatherResponseTest: HourlyWeatherResponse
     lateinit var weeklyWeatherResponseTest: List<Weather>
 
-    override fun getCurrentWeather(coord: Coord) = flow {
+    override fun getCurrentWeather(coord: Coord,lang:String,unit:String) = flow {
         currentWeatherResponseTest = Gson().fromJson(
             CurrentWeatherFakeResponse.fakeJsonResponse,
             CurrentWeatherResponse::class.java
@@ -32,7 +31,7 @@ class FakeWeatherRepositoryImpl(
         emit(currentWeatherResponseTest)
     }
 
-    override fun getHourlyWeather(coord: Coord) = flow {
+    override fun getHourlyWeather(coord: Coord,lang:String,unit:String) = flow {
         hourlyWeatherResponseTest = Gson().fromJson(
             HourlyWeatherFakeResponse.fakeJsonResponse,
             HourlyWeatherResponse::class.java
@@ -40,7 +39,7 @@ class FakeWeatherRepositoryImpl(
         emit(hourlyWeatherResponseTest)
     }
 
-    override fun getWeeklyWeather(coord: Coord) = flow {
+    override fun getWeeklyWeather(coord: Coord,lang:String,unit:String) = flow {
         val currentWeatherResponse = Gson().fromJson(
             CurrentWeatherFakeResponse.fakeJsonResponse,
             CurrentWeatherResponse::class.java
@@ -49,7 +48,7 @@ class FakeWeatherRepositoryImpl(
         emit(weeklyWeatherResponseTest)
     }
 
-    override fun getSearchedCity(coord: Coord) = flow {
+    override fun getSearchedCity(coord: Coord,lang:String,unit:String) = flow {
         currentWeatherResponseTest = Gson().fromJson(
             CurrentWeatherFakeResponse.fakeJsonResponse,
             CurrentWeatherResponse::class.java

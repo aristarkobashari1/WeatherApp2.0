@@ -116,9 +116,9 @@ class CurrentWeatherViewModelTest {
     @Test
     fun homeState_should_return_current_weekly_hourly_weather() = runTest {
         withContext(Dispatchers.IO) {
-            val currentWeather = fakeWeatherRepository.getCurrentWeather(Coord())
-            val weeklyWeather = fakeWeatherRepository.getWeeklyWeather(Coord())
-            val hourlyWeather = fakeWeatherRepository.getHourlyWeather(Coord())
+            val currentWeather = fakeWeatherRepository.getCurrentWeather(Coord(),"","")
+            val weeklyWeather = fakeWeatherRepository.getWeeklyWeather(Coord(),"","")
+            val hourlyWeather = fakeWeatherRepository.getHourlyWeather(Coord(),"","")
 
 
             viewModel.setCurrentWeatherNetwork(currentWeather)
